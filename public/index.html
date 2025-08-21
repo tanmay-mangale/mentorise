@@ -133,39 +133,13 @@
       </div>
 
       <!-- Mobile Navigation Menu (Hidden by default) -->
-      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-        <div class="px-2 pt-2 pb-3 space-y-1">
-          <!-- Mobile Navigation Links -->
-          <a
-            href="#home"
-            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
-            >Home</a
-          >
-          <a
-            href="#about"
-            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
-            >What is Mentorise?</a
-          >
-          <a
-            href="#categories"
-            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
-            >Categories</a
-          >
-          <a
-            href="#how"
-            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
-            >How It Works</a
-          >
-          <a
-            href="#contact"
-            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
-            >Contact</a
-          >
+      <div id="mobile-menu" class=" hidden md:hidden bg-white border-t">
+        
 
           <!-- Mobile Action Buttons -->
-          <div class="pt-4 pb-3 border-t border-neutral-200">
-            <button
-              class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+          <div class="flex flex-col justify-center items-center pt-4 pb-3 border-t border-neutral-200">
+            <button onclick="window.location.href='Login.html'"
+              class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left"
             >
               Log In
             </button>
@@ -185,7 +159,7 @@
          ======================================== -->
     <section
       id="home"
-      class="bg-gradient-to-br from-primary-500 to-primary-600 py-20 text-white"
+      class="h-screen sm:flex flex-col justify-center items-center bg-gradient-to-br from-primary-500 to-primary-600 py-20 text-white"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
@@ -193,11 +167,11 @@
             <!-- Main Heading and Description -->
             <div class="space-y-6">
               <h1
-                class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight font-heading"
+                class="Landing text-4xl md:text-5xl lg:text-6xl font-bold leading-tight font-heading"
               >
                 Guidance from Those Who've Been There
               </h1>
-              <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+              <p class="LandingP text-xl leading-relaxed max-w-3xl mx-auto">
                 Mentorise connects junior students with senior peers and faculty
                 from your own campus for genuine mentorship — whether it's
                 career prep, higher studies, technical skills, or personal
@@ -207,7 +181,7 @@
 
             <!-- Call-to-Action Buttons -->
             <div
-              class="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              class="btn flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <button
                 class="bg-secondary-500 text-neutral-800 px-8 py-4 rounded-full text-lg font-semibold hover:bg-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -229,7 +203,7 @@
          ABOUT SECTION
          Explains what Mentorise is and its value proposition
          ======================================== -->
-    <section id="about" class="py-20 bg-white">
+    <section id="about" class="h-screen flex flex-col justify-center items-center py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
           <!-- Section Title -->
@@ -448,7 +422,7 @@
          HOW IT WORKS SECTION
          Step-by-step process explanation
          ======================================== -->
-    <section id="how" class="py-20 bg-white">
+    <section id="how" class="infoContainer h-screen hidden sm:flex flex-col justify-center items-center py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-16">
@@ -465,7 +439,7 @@
         <!-- Process Steps Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Step 1: Browse Mentors -->
-          <div class="text-center">
+          <div class="info text-center">
             <div
               class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
@@ -479,9 +453,9 @@
               expertise.
             </p>
           </div>
-
+          
           <!-- Step 2: Book a Session -->
-          <div class="text-center">
+          <div class="info text-center">
             <div
               class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
@@ -496,7 +470,7 @@
           </div>
 
           <!-- Step 3: Connect & Learn -->
-          <div class="text-center">
+          <div class="info text-center">
             <div
               class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
@@ -509,7 +483,7 @@
           </div>
 
           <!-- Step 4: Apply & Grow -->
-          <div class="text-center">
+          <div class="info text-center">
             <div
               class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
             >
@@ -530,7 +504,7 @@
          NETWORKING SECTION
          Additional benefits beyond mentorship
          ======================================== -->
-    <section class="py-20 bg-white">
+    <section class="h-screen py-20 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
           <!-- Section Title -->
@@ -547,7 +521,7 @@
           </p>
 
           <!-- Benefits List -->
-          <div class="max-w-3xl mx-auto text-center">
+          <div class="benefits max-w-3xl mx-auto text-center">
             <h3 class="text-xl font-bold text-neutral-800 mb-6 font-heading">
               Through Mentorise, you can:
             </h3>
@@ -754,5 +728,8 @@
         }
       });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./scripts/IndexAnimation.js"></script>
   </body>
 </html>

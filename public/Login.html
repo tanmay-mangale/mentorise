@@ -105,6 +105,54 @@
             </p>
           </div>
 
+          <!-- User Type Selection -->
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-neutral-700 mb-3">
+              I am signing in as:
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="mentee"
+                  class="sr-only"
+                  checked
+                />
+                <div
+                  id="mentee-login-card"
+                  class="user-type-card border-2 border-primary-500 rounded-lg p-3 bg-primary-50 hover:bg-primary-100 transition-colors"
+                >
+                  <div class="text-center">
+                    <i
+                      class="fas fa-user-graduate text-xl text-primary-500 mb-1"
+                    ></i>
+                    <div class="font-medium text-neutral-800 text-sm">Mentee</div>
+                  </div>
+                </div>
+              </label>
+              <label class="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="mentor"
+                  class="sr-only"
+                />
+                <div
+                  id="mentor-login-card"
+                  class="user-type-card border-2 border-neutral-200 rounded-lg p-3 hover:border-primary-300 hover:bg-neutral-50 transition-colors"
+                >
+                  <div class="text-center">
+                    <i
+                      class="fas fa-chalkboard-teacher text-xl text-primary-500 mb-1"
+                    ></i>
+                    <div class="font-medium text-neutral-800 text-sm">Mentor</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
           <!-- Login Form -->
           <form class="space-y-6" id="loginForm">
             <!-- Email Field -->
@@ -201,23 +249,14 @@
               </div>
             </div>
 
-            <!-- Social Login Buttons -->
-            <div class="grid grid-cols-2 gap-3">
+            <!-- Social Login Button -->
+            <div class="flex justify-center">
               <button
                 type="button"
-                class="flex items-center justify-center px-4 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
+                class="flex items-center justify-center px-8 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
               >
                 <i class="fab fa-google text-red-500 mr-2"></i>
-                <span class="text-sm font-medium text-neutral-700">Google</span>
-              </button>
-              <button
-                type="button"
-                class="flex items-center justify-center px-4 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
-              >
-                <i class="fab fa-microsoft text-blue-500 mr-2"></i>
-                <span class="text-sm font-medium text-neutral-700"
-                  >Microsoft</span
-                >
+                <span class="text-sm font-medium text-neutral-700">Continue with Google</span>
               </button>
             </div>
           </form>
@@ -254,49 +293,75 @@
 
     <!-- JavaScript -->
     <script>
+      // User type selection for login
+      const userTypeInputs = document.querySelectorAll('input[name="userType"]');
+      const userTypeCards = document.querySelectorAll('.user-type-card');
+
+      userTypeInputs.forEach((input, index) => {
+        input.addEventListener('change', function () {
+          userTypeCards.forEach((card) => {
+            card.classList.remove('border-primary-500', 'bg-primary-50');
+            card.classList.add('border-neutral-200');
+          });
+
+          if (this.checked) {
+            userTypeCards[index].classList.remove('border-neutral-200');
+            userTypeCards[index].classList.add(
+              'border-primary-500',
+              'bg-primary-50'
+            );
+          }
+        });
+      });
+
+      // Initialize first option as selected
+      userTypeCards[0].classList.add('border-primary-500', 'bg-primary-50');
+
       // Password toggle functionality
-      const togglePassword = document.getElementById("togglePassword");
-      const passwordInput = document.getElementById("password");
-      const eyeIcon = document.getElementById("eyeIcon");
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
 
-      togglePassword.addEventListener("click", function () {
+      togglePassword.addEventListener('click', function () {
         const type =
-          passwordInput.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        passwordInput.setAttribute("type", type);
+          passwordInput.getAttribute('type') === 'password'
+            ? 'text'
+            : 'password';
+        passwordInput.setAttribute('type', type);
 
-        if (type === "password") {
-          eyeIcon.classList.remove("fa-eye-slash");
-          eyeIcon.classList.add("fa-eye");
+        if (type === 'password') {
+          eyeIcon.classList.remove('fa-eye-slash');
+          eyeIcon.classList.add('fa-eye');
         } else {
-          eyeIcon.classList.remove("fa-eye");
-          eyeIcon.classList.add("fa-eye-slash");
+          eyeIcon.classList.remove('fa-eye');
+          eyeIcon.classList.add('fa-eye-slash');
         }
       });
 
       // Form submission
       document
-        .getElementById("loginForm")
-        .addEventListener("submit", function (e) {
+        .getElementById('loginForm')
+        .addEventListener('submit', function (e) {
           e.preventDefault();
 
           // Get form data
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const userType = document.querySelector('input[name="userType"]:checked').value;
 
           // Basic validation
           if (!email || !password) {
-            alert("Please fill in all fields");
+            alert('Please fill in all fields');
             return;
           }
 
           // Here you would typically send the data to your backend
-          console.log("Login attempt:", { email, password });
+          console.log('Login attempt:', { email, password, userType });
 
-          // Simulate successful login and redirect to dashboard
-          alert("Login successful! Redirecting to dashboard...");
-          window.location.href = "mentee-dashboard.html";
+          // Simulate successful login and redirect based on user type
+          const dashboardUrl = userType === 'mentee' ? 'mentee-dashboard.html' : 'mentor-dashboard.html';
+          alert(`Login successful! Welcome back, ${userType}!`);
+          window.location.href = dashboardUrl;
         });
     </script>
   </body>

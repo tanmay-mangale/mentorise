@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentorise - Mentors Directory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: { 50: "#f0f4ff", 500: "#3A5BA0", 600: "#2F3C7E", 700: "#1e2a4a" },
+              secondary: { 50: "#fffbf0", 500: "#FFD447", 600: "#e6bf40" },
+              neutral: { 50: "#F5F7FA", 100: "#e5e7eb", 200: "#d1d5db", 600: "#555555", 800: "#222222" },
+            },
+            fontFamily: {
+              heading: ["Poppins", "Inter", "sans-serif"],
+              body: ["Roboto", "Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-neutral-50 font-body">
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <a href="index.html" class="text-2xl font-bold text-primary-500 font-heading">Mentorise</a>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a href="index.html#home" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+              <a href="index.html#about" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+              <a href="index.html#categories" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Categories</a>
+              <a href="mentors.html" class="text-primary-500 px-3 py-2 rounded-md text-sm font-semibold">Mentors</a>
+              <a href="index.html#contact" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+            </div>
+          </div>
+          <div class="hidden md:block">
+            <div class="flex items-center space-x-4">
+              <button onclick="window.location.href='Login.html'" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Log In</button>
+              <button onclick="window.location.href='signup.html'" class="bg-primary-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all duration-300 shadow-md">Sign Up</button>
+            </div>
+          </div>
+          <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-neutral-800 hover:text-primary-500 p-2" aria-label="Toggle mobile menu">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="flex flex-col justify-center items-center pt-4 pb-3 border-t border-neutral-200">
+          <a href="index.html#home" class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left">Home</a>
+          <a href="index.html#about" class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left">About</a>
+          <a href="index.html#categories" class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left">Categories</a>
+          <a href="mentors.html" class="text-center text-primary-500 block px-3 py-2 rounded-md text-base font-semibold w-[60%] text-left">Mentors</a>
+          <a href="index.html#contact" class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left">Contact</a>
+          <button onclick="window.location.href='Login.html'" class="text-center text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium w-[60%] text-left">Log In</button>
+          <button onclick="window.location.href='signup.html'" class="bg-primary-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all duration-300 mt-2">Sign Up</button>
+        </div>
+      </div>
+    </nav>
+
+    <header class="bg-gradient-to-br from-primary-500 to-primary-600 py-16 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold font-heading">Find Your Mentor</h1>
+        <p class="mt-4 text-lg opacity-90">Browse verified senior students and faculty mentors across disciplines.</p>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-100">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="relative md:flex-1">
+            <input id="searchInput" type="text" placeholder="Search by name, subject, qualification..." class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+          </div>
+          <div class="flex gap-3">
+            <select id="genderFilter" class="bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="all">All</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <select id="sortSelect" class="bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="name">Sort: Name</option>
+              <option value="experience">Sort: Experience</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="mentorsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+          <!-- Cards inserted by script -->
+        </div>
+
+        <!-- Results Info -->
+        <div id="resultsInfo" class="text-center text-neutral-600 mt-6 font-medium"></div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+          <button 
+            id="loadMoreBtn" 
+            class="bg-primary-500 text-white px-8 py-3 rounded-xl font-semibold hover:bg-primary-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            <i class="fas fa-plus mr-2"></i>
+            Load More Mentors
+          </button>
+        </div>
+
+        <div id="emptyState" class="hidden text-center text-neutral-600 py-12">
+          <i class="fas fa-search text-4xl text-neutral-300 mb-4"></i>
+          <p class="text-lg font-medium">No mentors found</p>
+          <p class="text-sm">Try changing your search criteria or filters</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-neutral-800 text-white py-10 mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <p class="text-neutral-400">&copy; 2025 Mentorise. All Rights Reserved.</p>
+        <div class="flex gap-6 text-neutral-400">
+          <a href="index.html#contact" class="hover:text-white transition-colors">Contact</a>
+          <a href="index.html#about" class="hover:text-white transition-colors">About</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+        document.addEventListener("click", (e) => {
+          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add("hidden");
+          }
+        });
+      }
+    </script>
+    <script src="./scripts/mentors.js"></script>
+  </body>
+</html>
+
+

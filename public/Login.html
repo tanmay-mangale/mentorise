@@ -1,67 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <title>Login Page</title>
-</head>
-<body class="min-h-screen flex items-center justify-center">
+  <head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Mentorise</title>
 
-  <main class="container bg-[#cae9ff] flex flex-col md:flex-row rounded-2xl shadow-lg max-w-4xl w-full p-6 md:p-10">
-    
-    <!-- Login Section -->
-    <section class="md:w-1/2 w-full px-4 md:px-10">
-      <header>
-        <h2 class="font-bold text-3xl text-[#155E91]">Login</h2>
-        <p class="text-sm mt-2 text-[#155E91]">Login through email:</p>
-      </header>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-      <form action="#" class="flex flex-col mt-6 space-y-4">
-        <div>
-          <input id="email" type="email" placeholder="Email" class="p-2 mt-1 w-full rounded-xl border border-blue-700 focus:outline-none focus:ring-2 focus:ring-[#155E91]" />
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            // Custom Color Palette
+            colors: {
+              primary: {
+                50: "#f0f4ff", // Light blue tint
+                500: "#3A5BA0", // Main brand blue
+                600: "#2F3C7E", // Darker blue for hover states
+                700: "#1e2a4a", // Deep blue for accents
+              },
+              secondary: {
+                50: "#fffbf0", // Light yellow tint
+                500: "#FFD447", // Main accent yellow
+                600: "#e6bf40", // Darker yellow for hover states
+              },
+              neutral: {
+                50: "#F5F7FA", // Very light gray background
+                100: "#e5e7eb", // Light gray
+                200: "#d1d5db", // Medium light gray
+                600: "#555555", // Dark gray text
+                800: "#222222", // Very dark gray/black
+              },
+            },
+            // Custom Font Families
+            fontFamily: {
+              heading: ["Poppins", "Inter", "sans-serif"], // For headings and titles
+              body: ["Roboto", "Open Sans", "sans-serif"], // For body text
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- External Stylesheets -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-neutral-50 font-body min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo/Brand -->
+          <div class="flex items-center">
+            <a href="index.html" class="flex-shrink-0">
+              <h1 class="text-2xl font-bold text-primary-500 font-heading">
+                Mentorise
+              </h1>
+            </a>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="hidden md:flex items-center space-x-4">
+            <a
+              href="index.html"
+              class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Home
+            </a>
+            <a
+              href="signup.html"
+              class="bg-primary-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all duration-300 shadow-md"
+            >
+              Sign Up
+            </a>
+          </div>
         </div>
-
-        <div class="relative">
-           <input id="password" type="password" placeholder="Password" class="p-2 mt-1 w-full rounded-xl border border-blue-700 focus:outline-none focus:ring-2 focus:ring-[#155E91]" />
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-            class="bi bi-eye absolute top-1 right-3 translate-y-1/2 cursor-pointer text-white hover:text-black transition-colors duration-200"
-            viewBox="0 0 16 16">
-            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
-            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
-            </svg>
-        </div>
-
-        <button type="submit" class="bg-[#155E91] hover:bg-[#104a6e] transition-colors rounded-xl text-white py-2 font-semibold">Log in</button>
-
-        <div class="text-xs text-right">
-          <a href="#" class="text-blue-600 hover:underline">Forgot your password?</a>
-        </div>
-      </form>
-
-      <div class="mt-6 grid grid-cols-3 items-center gap-2">
-        <hr class="border-gray-400" />
-        <p class="text-center text-sm text-[#155E91]">Or</p>
-        <hr class="border-gray-400" />
       </div>
+    </nav>
 
-      <button class="bg-white border border-gray-300 py-2 w-full rounded-xl mt-5 flex items-center justify-center hover:bg-gray-100 transition">
-        <img src="image/google-color.svg" alt="Google icon" class="h-5 w-5 mr-3" />
-        <span class="text-sm font-medium text-[#155E91]">Log in with Google</span>
-      </button>
+    <!-- Login Section -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-md mx-auto">
+        <!-- Login Card -->
+        <div
+          class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100"
+        >
+          <!-- Header -->
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-neutral-800 font-heading mb-2">
+              Welcome Back
+            </h2>
+            <p class="text-neutral-600">
+              Sign in to continue your mentorship journey
+            </p>
+          </div>
 
-      <div class="text-xs flex justify-center mt-4 items-center space-x-2">
-        <p class="text-[#155E91]">Don't have an account?</p>
-        <a href="#" class="text-blue-600 hover:underline">Sign up</a>
+          <!-- User Type Selection -->
+          <!-- <div class="mb-6">
+            <label class="block text-sm font-medium text-neutral-700 mb-3">
+              I am signing in as:
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="mentee"
+                  class="sr-only"
+                  checked
+                />
+                <div
+                  id="mentee-login-card"
+                  class="user-type-card border-2 border-primary-500 rounded-lg p-3 bg-primary-50 hover:bg-primary-100 transition-colors"
+                >
+                  <div class="text-center">
+                    <i
+                      class="fas fa-user-graduate text-xl text-primary-500 mb-1"
+                    ></i>
+                    <div class="font-medium text-neutral-800 text-sm">Mentee</div>
+                  </div>
+                </div>
+              </label>
+              <label class="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="mentor"
+                  class="sr-only"
+                />
+                <div
+                  id="mentor-login-card"
+                  class="user-type-card border-2 border-neutral-200 rounded-lg p-3 hover:border-primary-300 hover:bg-neutral-50 transition-colors"
+                >
+                  <div class="text-center">
+                    <i
+                      class="fas fa-chalkboard-teacher text-xl text-primary-500 mb-1"
+                    ></i>
+                    <div class="font-medium text-neutral-800 text-sm">Mentor</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div> -->
+
+          <!-- Login Form -->
+          <form class="space-y-6" id="loginForm">
+            <!-- Email Field -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Email Address
+              </label>
+              <div class="relative">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="Enter your email"
+                />
+                <i
+                  class="fas fa-envelope absolute right-3 top-3.5 text-neutral-400"
+                ></i>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Password
+              </label>
+              <div class="relative">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="absolute right-3 top-3.5 text-neutral-400 hover:text-neutral-600"
+                >
+                  <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input
+                  id="remember"
+                  name="remember"
+                  type="checkbox"
+                  class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-neutral-300 rounded"
+                />
+                <label
+                  for="remember"
+                  class="ml-2 block text-sm text-neutral-700"
+                >
+                  Remember me
+                </label>
+              </div>
+              <a
+                href="#"
+                class="text-sm text-primary-500 hover:text-primary-600 font-medium"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <!-- Login Button -->
+            <button
+              type="submit"
+              class="w-full bg-primary-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
+            >
+              Sign In
+            </button>
+
+            <!-- Divider -->
+            <div class="relative my-6">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-neutral-200"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-neutral-500"
+                  >Or continue with</span
+                >
+              </div>
+            </div>
+
+            <!-- Social Login Button -->
+            <div class="flex justify-center">
+              <button
+                type="button"
+                class="flex items-center justify-center px-8 py-2 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors"
+              >
+                <i class="fab fa-google text-red-500 mr-2"></i>
+                <span class="text-sm font-medium text-neutral-700">Continue with Google</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Sign Up Link -->
+          <div class="mt-8 text-center">
+            <p class="text-neutral-600">
+              Don't have an account?
+              <a
+                href="signup.html"
+                class="text-primary-500 hover:text-primary-600 font-medium"
+              >
+                Sign up here
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="mt-8 text-center">
+          <p class="text-sm text-neutral-500">
+            By signing in, you agree to our
+            <a href="#" class="text-primary-500 hover:text-primary-600"
+              >Terms of Service</a
+            >
+            and
+            <a href="#" class="text-primary-500 hover:text-primary-600"
+              >Privacy Policy</a
+            >
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- Image Section -->
-    <aside class="md:w-1/2 w-full hidden md:block">
-      <img src="image/side img.jpeg" alt="Login illustration" class="rounded-2xl w-full h-full object-cover" />
-    </aside>
-  </main>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="./scripts/LoginAnimation.js"></script>
-</body>
+    <!-- JavaScript -->
+    <script>
+      // User type selection for login
+      // const userTypeInputs = document.querySelectorAll('input[name="userType"]');
+      // const userTypeCards = document.querySelectorAll('.user-type-card');
+
+      // userTypeInputs.forEach((input, index) => {
+      //   input.addEventListener('change', function () {
+      //     userTypeCards.forEach((card) => {
+      //       card.classList.remove('border-primary-500', 'bg-primary-50');
+      //       card.classList.add('border-neutral-200');
+      //     });
+
+      //     if (this.checked) {
+      //       userTypeCards[index].classList.remove('border-neutral-200');
+      //       userTypeCards[index].classList.add(
+      //         'border-primary-500',
+      //         'bg-primary-50'
+      //       );
+      //     }
+      //   });
+      // });
+
+      // Initialize first option as selected
+      // userTypeCards[0].classList.add('border-primary-500', 'bg-primary-50');
+
+      // Password toggle functionality
+      const togglePassword = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      togglePassword.addEventListener('click', function () {
+        const type =
+          passwordInput.getAttribute('type') === 'password'
+            ? 'text'
+            : 'password';
+        passwordInput.setAttribute('type', type);
+
+        if (type === 'password') {
+          eyeIcon.classList.remove('fa-eye-slash');
+          eyeIcon.classList.add('fa-eye');
+        } else {
+          eyeIcon.classList.remove('fa-eye');
+          eyeIcon.classList.add('fa-eye-slash');
+        }
+      });
+
+      // Form submission
+      document
+        .getElementById('loginForm')
+        .addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          // Get form data
+          // const email = document.getElementById('email').value;
+          // const password = document.getElementById('password').value;
+          // const userType = document.querySelector('input[name="userType"]:checked').value;
+
+          // Basic validation
+          if (!email || !password) {
+            alert('Please fill in all fields');
+            return;
+          }
+
+          // Here you would typically send the data to your backend
+          // console.log('Login attempt:', { email, password, userType });
+
+          // Simulate successful login and redirect based on user type
+          // const dashboardUrl = userType === 'mentee' ? 'mentee-dashboard.html' : 'mentor-dashboard.html';
+          alert("Login successful! Welcome back");
+          // window.location.href = dashboardUrl;
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="scripts/LoginSignUpAnimation.js"></script>
+  </body>
 </html>

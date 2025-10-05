@@ -155,7 +155,8 @@
             <p class="text-neutral-600">Tell us about yourself to find the perfect mentors</p>
           </div>
 
-          <form class="space-y-6" id="menteeSignupForm">
+          <form class="space-y-6" id="menteeSignupForm" method="post">
+            <input type="hidden" name="userType" value="mentee">
             <!-- Name Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -342,7 +343,8 @@
             <p class="text-neutral-600">Share your expertise and help others grow</p>
           </div>
 
-          <form class="space-y-6" id="mentorSignupForm">
+          <form class="space-y-6" id="mentorSignupForm" method="post">
+            <input type="hidden" name="userType" value="mentee">
             <!-- Name Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -532,7 +534,7 @@
                 <a href="#" class="text-primary-500 hover:text-primary-600">Privacy Policy</a>
               </label>
             </div> -->
-
+            
             <!-- Submit Button -->
             <button
               type="submit"
@@ -557,6 +559,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- JavaScript -->
     <script>
@@ -603,12 +606,12 @@
 
       // Form submission handlers
       document.getElementById('menteeSignupForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         alert('Mentee account created successfully! Welcome to Mentorise!');
       });
 
       document.getElementById('mentorSignupForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         alert('Mentor account created successfully! Thank you for joining our community!');
       });
     </script>

@@ -1,6 +1,6 @@
 const express=require("express");
 const path=require("path");
-const { signupUser } = require("./firebase");
+const { signupUser,loginUser } = require("./firebase");
 
 const app=express();
 const port=8080;
@@ -38,5 +38,16 @@ app.post("/signup",async (req,res)=>{
         res.send("Signup successful!");
     } else {
         res.status(400).send(result.message);
+    }
+})
+
+app.post("/login",async(req,res)=>{
+    //console.log(req.body);
+    const {email,password}=req.body;
+    const result=await loginUser(email,password);
+    if(result.success){
+        res.send("sucessfully logged in");
+    }else{
+        res.status(404).send(result.message);
     }
 })

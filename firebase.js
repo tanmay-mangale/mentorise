@@ -1,5 +1,6 @@
 const firebase = require("firebase/compat/app");
 require("firebase/compat/auth");
+require("firebase/compat/firestore");
 
 const firebaseConfig = {
     apiKey: "AIzaSyDMjzDbBmDRXtcEY80Vn-ChdX8p-hW-GTM",
@@ -13,6 +14,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db=firebase.firestore();
 
 async function signupUser(email,password) {
   try{
@@ -26,4 +28,16 @@ async function signupUser(email,password) {
   }
 }
 
-module.exports={signupUser};
+async function loginUser(email,password) {
+  try{
+    const userCredential= await auth.signInWithEmailAndPassword(email,password)
+    const user=userCredential.user;
+    console.log("login successful");
+    return{success:true,user};
+  }catch(e){
+    console.error("login falied:",e.message);
+    return{success:false,message:e.message};
+  }
+}
+
+module.exports={signupUser,loginUser};

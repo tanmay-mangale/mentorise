@@ -276,6 +276,7 @@
                   <i class="fas fa-eye" id="menteeEyeIcon"></i>
                 </button>
               </div>
+              <p class="text-xs text-neutral-500 mt-1">Password must be of minimum 6 charater</p>
             </div>
 
             <!-- Areas of Interest -->
@@ -344,7 +345,7 @@
           </div>
 
           <form class="space-y-6" id="mentorSignupForm" method="post">
-            <input type="hidden" name="userType" value="mentee">
+            <input type="hidden" name="userType" value="mentor">
             <!-- Name Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -470,7 +471,9 @@
                   <i class="fas fa-eye" id="mentorEyeIcon"></i>
                 </button>
               </div>
+              <p class="text-xs text-neutral-500 mt-1">Password must be of minimum 6 charater</p>
             </div>
+            
 
             <!-- Areas they can mentor in -->
             <div>
@@ -605,7 +608,7 @@
       }
 
       // Form submission handlers
-      document.getElementById('menteeSignupForm').addEventListener('submit', function(e) {
+      document.getElementById('menteeSignupForm').addEventListener('submit', async function(e) {
         //e.preventDefault();
         alert('Mentee account created successfully! Welcome to Mentorise!');
       });

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentor Profile - Mentorise</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f4ff",
+                500: "#3A5BA0",
+                600: "#2F3C7E",
+                700: "#1e2a4a",
+              },
+              secondary: {
+                50: "#fffbf0",
+                500: "#FFD447",
+                600: "#e6bf40",
+              },
+              neutral: {
+                50: "#F5F7FA",
+                100: "#e5e7eb",
+                200: "#d1d5db",
+                600: "#555555",
+                800: "#222222",
+              },
+            },
+            fontFamily: {
+              heading: ["Poppins", "Inter", "sans-serif"],
+              body: ["Roboto", "Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- External Stylesheets -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom Styles -->
+    <style>
+      /* Smooth transitions and subtle animations */
+      .card-hover {
+        transition: all 0.2s ease-in-out;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+
+      /* Loading animation for dynamic content */
+      .fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body class="bg-neutral-50 font-body">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <a href="index.html">
+                <h1 class="text-2xl font-bold text-primary-500 font-heading">
+                  Mentorise
+                </h1>
+              </a>
+            </div>
+          </div>
+
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a href="index.html" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+              <a href="mentor-profile.html" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+            </div>
+          </div>
+
+          <div class="hidden md:block">
+            <button onclick="logout()" class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              Logout
+            </button>
+          </div>
+
+          <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-neutral-800 hover:text-primary-500 p-2">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="index.html" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+          <a href="mentor-profile.html" class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+          <button onclick="logout()" class="text-neutral-800 hover:text-red-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-neutral-100">
+          <!-- Profile Header -->
+          <div class="text-center mb-8">
+            <div class="relative inline-block mb-4">
+              <div class="w-28 h-28 rounded-full flex items-center justify-center shadow-lg mx-auto">
+                    <img
+                      src="https://images.unsplash.com/photo-1736967980147-39c09028d37a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=627"
+                      alt="Profile Picture"
+                      class="w-28 h-28 rounded-full object-cover"
+                    />
+                  </div>
+              <div class="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-white text-xs"></i>
+                  </div>
+                </div>
+                      <h1 id="profileName" class="text-3xl font-bold text-neutral-800 font-heading mb-2">
+                        <%= user.firstName %> <%= user.lastName %>
+                      </h1>
+                      <p id="profileRole" class="text-neutral-600 text-lg mb-2">
+                        <%= user.currentRole %>
+                      </p>
+            <p id="profileField" class="text-primary-500 mb-4">
+              <i class="fas fa-graduation-cap mr-2"></i>
+              <span id="fieldDisplay"><%= user.field %></span>
+            </p>
+            <div class="flex flex-wrap gap-2 justify-center mb-6">
+              <span id="verificationBadge" class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+                <i class="fas fa-check-circle mr-2"></i>
+                          Verified Mentor
+                        </span>
+              <span class="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium">
+                <i class="fas fa-chalkboard-teacher mr-2"></i>
+                Active Mentor
+                        </span>
+            </div>
+          </div>
+
+            <!-- Profile Information -->
+          <div class="space-y-6">
+            <!-- Basic Information -->
+            <div class="border-t border-neutral-200 pt-6">
+              <h3 class="text-lg font-semibold text-neutral-800 mb-4">
+                <i class="fas fa-user text-primary-500 mr-2"></i>
+                Profile Details
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center">
+                  <i class="fas fa-envelope text-primary-500 mr-3 w-5"></i>
+                  <span id="profileEmail" class="text-neutral-600"><%= user.email %></span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-briefcase text-primary-500 mr-3 w-5"></i>
+                  <span id="profileRoleDisplay" class="text-neutral-600"><%= user.currentRole  %></span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-graduation-cap text-primary-500 mr-3 w-5"></i>
+                  <span id="profileFieldDisplay" class="text-neutral-600"><%= user.field %></span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-calendar text-primary-500 mr-3 w-5"></i>
+                  <span id="memberSince" class="text-neutral-600">Recently joined</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Areas of Expertise -->
+            <div class="border-t border-neutral-200 pt-6">
+              <h3 class="text-lg font-semibold text-neutral-800 mb-4">
+                <i class="fas fa-tools text-secondary-500 mr-2"></i>
+                Areas of Expertise
+              </h3>
+              <div id="areasList" class="flex flex-wrap gap-2">
+                <% if(user.mentoringAreas && user.mentoringAreas.length > 0) { %>
+                    <% user.mentoringAreas.forEach(area => { %>
+                        <span class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-primary-200 transition-colors">
+                        <%= area %>
+                         </span>
+                    <% }) %>
+                <% } else { %>
+                      <span>No areas selected</span>
+                <% } %>
+              </div>
+            </div>
+            </div>
+
+          <!-- Action Buttons -->
+          <div class="border-t border-neutral-200 pt-6 mt-8">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onclick="editProfile()"
+                class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors"
+              >
+                <i class="fas fa-edit mr-2"></i>
+                Edit Profile
+              </button>
+                <button
+                  onclick="viewRequests()"
+                class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors"
+                >
+                  <i class="fas fa-inbox mr-2"></i>
+                View Requests
+                </button>
+                <button
+                  onclick="scheduleMeeting()"
+                class="border border-secondary-500 text-secondary-600 px-6 py-3 rounded-lg font-medium hover:bg-secondary-50 transition-colors"
+                >
+                  <i class="fas fa-plus mr-2"></i>
+                  Schedule Meeting
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        setupMobileMenu();
+      });
+
+      function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+          window.location.href = 'index.html';
+        }
+      }
+
+      function setupMobileMenu() {
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add("hidden");
+            }
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

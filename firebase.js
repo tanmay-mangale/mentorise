@@ -21,7 +21,7 @@ const saveUser = async (userData) => {
   try {
     let node;
     if (userData.userType === "mentee") node = "mentees";
-    else if (userData.userType === "mentor") node = "mentor";
+    else if (userData.userType === "mentor") node = "mentors";
     else throw new Error("Invalid user type");
 
     const dataToSave = { ...userData };
@@ -60,4 +60,4 @@ async function loginUser(email,password) {
   }
 }
 
-module.exports={signupUser,loginUser,saveUser};
+module.exports={signupUser,loginUser,saveUser,database};

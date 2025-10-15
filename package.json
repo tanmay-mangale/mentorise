@@ -1,0 +1,26 @@
+{
+  "name": "mentorise",
+  "version": "1.0.0",
+  "description": "A mentor-mentee connection platform",
+  "homepage": "https://github.com/tanmay-mangale/mentorise#readme",
+  "bugs": {
+    "url": "https://github.com/tanmay-mangale/mentorise/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanmay-mangale/mentorise.git"
+  },
+  "license": "ISC",
+  "author": "Tanmay",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "firebase": "^12.3.0"
+  }
+}

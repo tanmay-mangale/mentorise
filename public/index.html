@@ -55,7 +55,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-neutral-50 font-body">
+  <body class="bg-neutral-50 font-body overflow-x-hidden">
     <!-- ========================================
          NAVIGATION BAR
          Sticky navigation with responsive design
@@ -107,12 +107,12 @@
           <!-- Desktop Action Buttons -->
           <div class="hidden md:block">
             <div class="flex items-center space-x-4">
-              <button onclick="window.location.href='Login.html'"
+              <button onclick="window.location.href='/login'"
                 class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Log In
               </button>
-              <button onclick="window.location.href='signup.html'"
+              <button onclick="window.location.href='/signup'"
                 class="bg-primary-500 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-primary-600 transition-all duration-300 shadow-md"
               >
                 Sign Up
@@ -191,7 +191,7 @@
                 Find a Mentor
               </button>
               <button
-                onclick="window.location.href='signup.html'"
+                onclick="window.location.href='/signup  '"
                 class="border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300"
               >
                 Become a Mentor

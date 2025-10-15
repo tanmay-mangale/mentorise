@@ -1,0 +1,102 @@
+const express=require("express");
+const path=require("path");
+const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
+
+const app=express();
+const port=8080;
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
+app.listen(port,()=>{
+    console.log("server started");
+})
+
+app.use(express.static(path.join(__dirname,"public")))
+
+app.get("/",(req,res)=>{
+    res.redirect("/home");
+})
+
+app.get("/home",(req,res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+})
+
+app.get("/login",(req,res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'Login.html'));
+})
+
+app.get("/signup",(req,res)=>{
+    res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+})
+
+app.post("/signup",async (req,res)=>{
+    console.log(req.body);
+    const {email,password}=req.body;
+    const result = await signupUser(email, password);
+
+    if(result.success){
+        const result = await saveUser(req.body);
+        res.send("successful signup");
+    } else {
+        res.status(400).send(result.message);
+    }
+})
+
+app.post("/login",async(req,res)=>{
+    //console.log(req.body);
+    const {email,password}=req.body;
+    const result=await loginUser(email,password);
+
+    if (!result.success) {
+        return res.status(404).send(result.message);
+    }
+
+    try {
+        let userTypeFound = null;
+        let userData = null;
+
+        // Check in mentors
+        const mentorsSnapshot = await database.ref("mentors").once("value");
+        mentorsSnapshot.forEach((child) => {
+            if (child.val().email === email) {
+                userTypeFound = "mentor";
+                userData = child.val();
+            }
+        });
+
+        // Check in mentees if not found in mentors
+        if (!userTypeFound) {
+        const menteesSnapshot = await database.ref("mentees").once("value");
+        menteesSnapshot.forEach((child) => {
+            if (child.val().email === email) {
+            userTypeFound = "mentee";
+            userData = child.val();
+            }
+        });
+        }
+
+        if (userTypeFound === "mentor") {
+            res.render("mentor-profile", { user: userData });
+        } else if (userTypeFound === "mentee") {
+            res.render("mentee-profile", { user: userData });
+        } else {
+            res.status(404).send("User type not found!");
+        }
+    } catch (error) {
+        console.error("Error fetching user type:", error);
+        res.status(500).send("Server error");
+    }
+})
+
+app.post("/logout",async(req,res)=>{
+    const result =await logoutUser();
+    if(result.success){
+        res.redirect("/login");
+    }else{
+        res.status(500).send("logout falied"+result.message);
+    }
+})

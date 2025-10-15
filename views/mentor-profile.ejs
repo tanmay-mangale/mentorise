@@ -118,7 +118,7 @@
           </div>
 
           <div class="hidden md:block">
-            <button onclick="logout()" class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <button id="logoutbtn" class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Logout
             </button>
           </div>
@@ -259,16 +259,14 @@
     </section>
 
     <script>
+      document.getElementById("logoutbtn").addEventListener("click",async ()=>{
+        const res= await fetch("/logout",{method:"POST"});
+        if(res.ok) window.location.href = "/login";
+      })
 
       document.addEventListener('DOMContentLoaded', function() {
         setupMobileMenu();
       });
-
-      function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-          window.location.href = 'index.html';
-        }
-      }
 
       function setupMobileMenu() {
         const mobileMenuButton = document.getElementById("mobile-menu-button");

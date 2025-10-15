@@ -1,6 +1,6 @@
 const express=require("express");
 const path=require("path");
-const { signupUser,loginUser,saveUser,database } = require("./firebase");
+const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
 
 const app=express();
 const port=8080;
@@ -89,5 +89,14 @@ app.post("/login",async(req,res)=>{
     } catch (error) {
         console.error("Error fetching user type:", error);
         res.status(500).send("Server error");
+    }
+})
+
+app.post("/logout",async(req,res)=>{
+    const result =await logoutUser();
+    if(result.success){
+        res.redirect("/login");
+    }else{
+        res.status(500).send("logout falied"+result.message);
     }
 })

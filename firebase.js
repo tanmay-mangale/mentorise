@@ -60,4 +60,15 @@ async function loginUser(email,password) {
   }
 }
 
-module.exports={signupUser,loginUser,saveUser,database};
+async function logoutUser() {
+  try {
+    await auth.signOut();
+    console.log("User logged out successfully");
+    return { success: true, message: "User logged out successfully" };
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+module.exports={signupUser,loginUser,saveUser,database,logoutUser};

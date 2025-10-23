@@ -96,16 +96,24 @@
           <h2 class="text-3xl font-bold text-neutral-800 font-heading mb-2">
             Join the Mentorise Community
           </h2>
-          <p class="text-neutral-600">Choose your path and start your mentorship journey</p>
+          <p class="text-neutral-600">
+            Choose your path and start your mentorship journey
+          </p>
         </div>
 
         <!-- User Type Selection -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100 mb-8">
+        <div
+          class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100 mb-8"
+        >
           <div class="text-center mb-6">
-            <h3 class="text-xl font-semibold text-neutral-800 mb-2">I want to join as:</h3>
-            <p class="text-neutral-600 text-sm">Select your role to see the relevant signup form</p>
+            <h3 class="text-xl font-semibold text-neutral-800 mb-2">
+              I want to join as:
+            </h3>
+            <p class="text-neutral-600 text-sm">
+              Select your role to see the relevant signup form
+            </p>
           </div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Mentee Option -->
             <label class="relative cursor-pointer">
@@ -117,11 +125,20 @@
                 checked
                 onchange="toggleForm('mentee')"
               />
-              <div id="mentee-card" class="user-type-card border-2 border-primary-500 rounded-xl p-6 bg-primary-50 hover:bg-primary-100 transition-all duration-300">
+              <div
+                id="mentee-card"
+                class="user-type-card border-2 border-primary-500 rounded-xl p-6 bg-primary-50 hover:bg-primary-100 transition-all duration-300"
+              >
                 <div class="text-center">
-                  <i class="fas fa-user-graduate text-3xl text-primary-500 mb-3"></i>
-                  <h4 class="font-semibold text-neutral-800 text-lg mb-1">Mentee</h4>
-                  <p class="text-sm text-neutral-600">Looking for guidance and mentorship</p>
+                  <i
+                    class="fas fa-user-graduate text-3xl text-primary-500 mb-3"
+                  ></i>
+                  <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                    Mentee
+                  </h4>
+                  <p class="text-sm text-neutral-600">
+                    Looking for guidance and mentorship
+                  </p>
                 </div>
               </div>
             </label>
@@ -135,11 +152,20 @@
                 class="sr-only"
                 onchange="toggleForm('mentor')"
               />
-              <div id="mentor-card" class="user-type-card border-2 border-neutral-200 rounded-xl p-6 hover:border-primary-300 hover:bg-neutral-50 transition-all duration-300">
+              <div
+                id="mentor-card"
+                class="user-type-card border-2 border-neutral-200 rounded-xl p-6 hover:border-primary-300 hover:bg-neutral-50 transition-all duration-300"
+              >
                 <div class="text-center">
-                  <i class="fas fa-chalkboard-teacher text-3xl text-primary-500 mb-3"></i>
-                  <h4 class="font-semibold text-neutral-800 text-lg mb-1">Mentor</h4>
-                  <p class="text-sm text-neutral-600">Ready to share knowledge and experience</p>
+                  <i
+                    class="fas fa-chalkboard-teacher text-3xl text-primary-500 mb-3"
+                  ></i>
+                  <h4 class="font-semibold text-neutral-800 text-lg mb-1">
+                    Mentor
+                  </h4>
+                  <p class="text-sm text-neutral-600">
+                    Ready to share knowledge and experience
+                  </p>
                 </div>
               </div>
             </label>
@@ -147,20 +173,28 @@
         </div>
 
         <!-- Mentee Form -->
-        <div id="mentee-form" class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100">
+        <div
+          id="mentee-form"
+          class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100"
+        >
           <div class="text-center mb-8">
             <h3 class="text-2xl font-bold text-neutral-800 font-heading mb-2">
               Mentee Registration
             </h3>
-            <p class="text-neutral-600">Tell us about yourself to find the perfect mentors</p>
+            <p class="text-neutral-600">
+              Tell us about yourself to find the perfect mentors
+            </p>
           </div>
 
           <form class="space-y-6" id="menteeSignupForm" method="post">
-            <input type="hidden" name="userType" value="mentee">
+            <input type="hidden" name="userType" value="mentee" />
             <!-- Name Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label for="menteeFirstName" class="block text-sm font-medium text-neutral-700 mb-2">
+                <label
+                  for="menteeFirstName"
+                  class="block text-sm font-medium text-neutral-700 mb-2"
+                >
                   First Name *
                 </label>
                 <input
@@ -173,7 +207,10 @@
                 />
               </div>
               <div>
-                <label for="menteeLastName" class="block text-sm font-medium text-neutral-700 mb-2">
+                <label
+                  for="menteeLastName"
+                  class="block text-sm font-medium text-neutral-700 mb-2"
+                >
                   Last Name *
                 </label>
                 <input
@@ -189,7 +226,10 @@
 
             <!-- Email Field -->
             <div>
-              <label for="menteeEmail" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="menteeEmail"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Email Address *
               </label>
               <div class="relative">
@@ -201,7 +241,9 @@
                   class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                   placeholder="your.email@college.edu"
                 />
-                <i class="fas fa-envelope absolute right-3 top-3.5 text-neutral-400"></i>
+                <i
+                  class="fas fa-envelope absolute right-3 top-3.5 text-neutral-400"
+                ></i>
               </div>
               <p class="text-xs text-neutral-500 mt-1">
                 Use your college or work email for verification
@@ -210,7 +252,10 @@
 
             <!-- College/University Field -->
             <div>
-              <label for="menteeCollege" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="menteeCollege"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 College / University *
               </label>
               <select
@@ -235,7 +280,10 @@
 
             <!-- Year of Study Field -->
             <div>
-              <label for="menteeYear" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="menteeYear"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Year of Study / Position *
               </label>
               <select
@@ -256,7 +304,10 @@
 
             <!-- Password Field -->
             <div>
-              <label for="menteePassword" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="menteePassword"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Password *
               </label>
               <div class="relative">
@@ -276,7 +327,9 @@
                   <i class="fas fa-eye" id="menteeEyeIcon"></i>
                 </button>
               </div>
-              <p class="text-xs text-neutral-500 mt-1">Password must be of minimum 6 charater</p>
+              <p class="text-xs text-neutral-500 mt-1">
+                Password must be of minimum 6 charater
+              </p>
             </div>
 
             <!-- Areas of Interest -->
@@ -286,43 +339,90 @@
               </label>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="higher-studies" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="higher-studies"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Higher Studies</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="interview-prep" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="interview-prep"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Interview Prep</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="startup-entrepreneurship" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="startup-entrepreneurship"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Startup & Entrepreneurship</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="technical-skills" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="technical-skills"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Technical Skills</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="academic-support" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="academic-support"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Academic Support</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="personal-growth" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="personal-growth"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Personal Growth</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="career-guidance" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="career-guidance"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Career Guidance</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="research" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="research"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Research</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="areasOfInterest" value="networking" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="areasOfInterest"
+                    value="networking"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Networking</span>
                 </label>
               </div>
-              <p class="text-xs text-neutral-500 mt-1">Select all areas where you need guidance</p>
+              <p class="text-xs text-neutral-500 mt-1">
+                Select all areas where you need guidance
+              </p>
             </div>
 
             <!-- Submit Button -->
@@ -336,20 +436,28 @@
         </div>
 
         <!-- Mentor Form -->
-        <div id="mentor-form" class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100 hidden">
+        <div
+          id="mentor-form"
+          class="bg-white rounded-2xl shadow-xl p-8 border border-neutral-100 hidden"
+        >
           <div class="text-center mb-8">
             <h3 class="text-2xl font-bold text-neutral-800 font-heading mb-2">
               Mentor Registration
             </h3>
-            <p class="text-neutral-600">Share your expertise and help others grow</p>
+            <p class="text-neutral-600">
+              Share your expertise and help others grow
+            </p>
           </div>
 
           <form class="space-y-6" id="mentorSignupForm" method="post">
-            <input type="hidden" name="userType" value="mentor">
+            <input type="hidden" name="userType" value="mentor" />
             <!-- Name Fields -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label for="mentorFirstName" class="block text-sm font-medium text-neutral-700 mb-2">
+                <label
+                  for="mentorFirstName"
+                  class="block text-sm font-medium text-neutral-700 mb-2"
+                >
                   First Name *
                 </label>
                 <input
@@ -362,7 +470,10 @@
                 />
               </div>
               <div>
-                <label for="mentorLastName" class="block text-sm font-medium text-neutral-700 mb-2">
+                <label
+                  for="mentorLastName"
+                  class="block text-sm font-medium text-neutral-700 mb-2"
+                >
                   Last Name *
                 </label>
                 <input
@@ -378,7 +489,10 @@
 
             <!-- Email Field -->
             <div>
-              <label for="mentorEmail" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="mentorEmail"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Email Address *
               </label>
               <div class="relative">
@@ -390,7 +504,9 @@
                   class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                   placeholder="your.email@college.edu"
                 />
-                <i class="fas fa-envelope absolute right-3 top-3.5 text-neutral-400"></i>
+                <i
+                  class="fas fa-envelope absolute right-3 top-3.5 text-neutral-400"
+                ></i>
               </div>
               <p class="text-xs text-neutral-500 mt-1">
                 Use your college or work email for verification
@@ -399,7 +515,10 @@
 
             <!-- Current Role/Position Field -->
             <div>
-              <label for="mentorRole" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="mentorRole"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Current Role / Position *
               </label>
               <input
@@ -414,17 +533,59 @@
 
             <!-- Field/Specialization -->
             <div>
-              <label for="mentorField" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="mentorField"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Field / Specialization *
               </label>
               <input
                 type="text"
                 id="mentorField"
                 name="field"
+                placeholder="e.g. Web-developement"
                 required
                 class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
               />
             </div>
+
+            <!-- Experience -->
+            <div>
+              <label
+                for="mentorField"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                Experience *
+              </label>
+              <input
+                type="text"
+                id="mentorExperience"
+                name="experience"
+                placeholder="e.g. 5 years"
+                required
+                class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              />
+            </div>
+
+            <!-- about -->
+            <div>
+              <label
+                for="mentorField"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
+                About yourself *
+              </label>
+              <textarea
+                name="about"
+                placeholder="Write a brief introduction about yourself, your experience, and your areas of expertise..."
+                id="mentorAbout"
+                required
+                class="w-full h-40 resize-none px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              ></textarea>
+            </div>
+
+            <!-- linkedin -->
+            
             <!-- <div>
               <label for="mentorField" class="block text-sm font-medium text-neutral-700 mb-2">
                 Field / Specialization *
@@ -451,7 +612,10 @@
 
             <!-- Password Field -->
             <div>
-              <label for="mentorPassword" class="block text-sm font-medium text-neutral-700 mb-2">
+              <label
+                for="mentorPassword"
+                class="block text-sm font-medium text-neutral-700 mb-2"
+              >
                 Password *
               </label>
               <div class="relative">
@@ -471,9 +635,10 @@
                   <i class="fas fa-eye" id="mentorEyeIcon"></i>
                 </button>
               </div>
-              <p class="text-xs text-neutral-500 mt-1">Password must be of minimum 6 charater</p>
+              <p class="text-xs text-neutral-500 mt-1">
+                Password must be of minimum 6 charater
+              </p>
             </div>
-            
 
             <!-- Areas they can mentor in -->
             <div>
@@ -482,43 +647,90 @@
               </label>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="higher-studies" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="higher-studies"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Higher Studies</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="interview-prep" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="interview-prep"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Interview Prep</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="startup-entrepreneurship" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="startup-entrepreneurship"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Startup & Entrepreneurship</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="technical-skills" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="technical-skills"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Technical Skills</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="academic-support" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="academic-support"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Academic Support</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="personal-growth" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="personal-growth"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Personal Growth</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="career-guidance" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="career-guidance"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Career Guidance</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="research" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="research"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Research</span>
                 </label>
                 <label class="flex items-center">
-                  <input type="checkbox" name="mentoringAreas" value="networking" class="mr-2 text-primary-500">
+                  <input
+                    type="checkbox"
+                    name="mentoringAreas"
+                    value="networking"
+                    class="mr-2 text-primary-500"
+                  />
                   <span class="text-sm">Networking</span>
                 </label>
               </div>
-              <p class="text-xs text-neutral-500 mt-1">Select all areas where you can provide guidance</p>
+              <p class="text-xs text-neutral-500 mt-1">
+                Select all areas where you can provide guidance
+              </p>
             </div>
 
             <!-- Terms and Conditions -->
@@ -537,7 +749,7 @@
                 <a href="#" class="text-primary-500 hover:text-primary-600">Privacy Policy</a>
               </label>
             </div> -->
-            
+
             <!-- Submit Button -->
             <button
               type="submit"
@@ -563,60 +775,70 @@
       </div>
     </section>
 
-
     <!-- JavaScript -->
     <script>
       // Toggle between mentee and mentor forms
       function toggleForm(userType) {
-        const menteeForm = document.getElementById('mentee-form');
-        const mentorForm = document.getElementById('mentor-form');
-        const menteeCard = document.getElementById('mentee-card');
-        const mentorCard = document.getElementById('mentor-card');
+        const menteeForm = document.getElementById("mentee-form");
+        const mentorForm = document.getElementById("mentor-form");
+        const menteeCard = document.getElementById("mentee-card");
+        const mentorCard = document.getElementById("mentor-card");
 
-        if (userType === 'mentee') {
-          menteeForm.classList.remove('hidden');
-          mentorForm.classList.add('hidden');
-          menteeCard.classList.add('border-primary-500', 'bg-primary-50');
-          menteeCard.classList.remove('border-neutral-200');
-          mentorCard.classList.remove('border-primary-500', 'bg-primary-50');
-          mentorCard.classList.add('border-neutral-200');
+        if (userType === "mentee") {
+          menteeForm.classList.remove("hidden");
+          mentorForm.classList.add("hidden");
+          menteeCard.classList.add("border-primary-500", "bg-primary-50");
+          menteeCard.classList.remove("border-neutral-200");
+          mentorCard.classList.remove("border-primary-500", "bg-primary-50");
+          mentorCard.classList.add("border-neutral-200");
         } else {
-          menteeForm.classList.add('hidden');
-          mentorForm.classList.remove('hidden');
-          mentorCard.classList.add('border-primary-500', 'bg-primary-50');
-          mentorCard.classList.remove('border-neutral-200');
-          menteeCard.classList.remove('border-primary-500', 'bg-primary-50');
-          menteeCard.classList.add('border-neutral-200');
+          menteeForm.classList.add("hidden");
+          mentorForm.classList.remove("hidden");
+          mentorCard.classList.add("border-primary-500", "bg-primary-50");
+          mentorCard.classList.remove("border-neutral-200");
+          menteeCard.classList.remove("border-primary-500", "bg-primary-50");
+          menteeCard.classList.add("border-neutral-200");
         }
       }
 
       // Password visibility toggle
       function togglePasswordVisibility(passwordId) {
         const passwordInput = document.getElementById(passwordId);
-        const eyeIcon = document.getElementById(passwordId.replace('Password', 'EyeIcon'));
-        
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+        const eyeIcon = document.getElementById(
+          passwordId.replace("Password", "EyeIcon")
+        );
 
-        if (type === 'password') {
-          eyeIcon.classList.remove('fa-eye-slash');
-          eyeIcon.classList.add('fa-eye');
+        const type =
+          passwordInput.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        passwordInput.setAttribute("type", type);
+
+        if (type === "password") {
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
         } else {
-          eyeIcon.classList.remove('fa-eye');
-          eyeIcon.classList.add('fa-eye-slash');
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
         }
       }
 
       // Form submission handlers
-      document.getElementById('menteeSignupForm').addEventListener('submit', async function(e) {
-        //e.preventDefault();
-        alert('Mentee account created successfully! Welcome to Mentorise!');
-      });
+      document
+        .getElementById("menteeSignupForm")
+        .addEventListener("submit", async function (e) {
+          //e.preventDefault();
+          alert("Mentee account created successfully! Welcome to Mentorise!");
+        });
 
-      document.getElementById('mentorSignupForm').addEventListener('submit', function(e) {
-        //e.preventDefault();
-        alert('Mentor account created successfully! Thank you for joining our community!');
-      });
+      document
+        .getElementById("mentorSignupForm")
+        .addEventListener("submit", function (e) {
+          //e.preventDefault();
+          alert(
+            "Mentor account created successfully! Thank you for joining our community!"
+          );
+        });
     </script>
   </body>
 </html>

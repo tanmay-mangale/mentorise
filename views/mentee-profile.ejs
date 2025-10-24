@@ -60,7 +60,7 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <a href="index.html">
+              <a href="/home">
                 <h1 class="text-2xl font-bold text-primary-500 font-heading">
                   Mentorise
                 </h1>
@@ -70,8 +70,7 @@
 
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a href="index.html" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-              <a href="mentors.html" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Mentors</a>
+              <a href="/home" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
               <a href="mentee-profile.html" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
             </div>
           </div>
@@ -109,7 +108,7 @@
             <div class="relative inline-block mb-4">
               <div class="w-28 h-28 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg mx-auto">
                 <img
-                  src="https://images.unsplash.com/photo-1695927621677-ec96e048dce2?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=735"
+                  src="<%= user.img %>"
                   alt="Profile Picture"
                   class="w-28 h-28 rounded-full object-cover"
                 />
@@ -187,14 +186,7 @@
           <div class="border-t border-neutral-200 pt-6 mt-8">
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onclick="editProfile()"
-                class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors"
-              >
-                <i class="fas fa-edit mr-2"></i>
-                Edit Profile
-              </button>
-              <button
-                onclick="window.location.href='mentors.html'"
+                onclick="window.location.href='/mentor-directory'"
                 class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors"
               >
                 <i class="fas fa-search mr-2"></i>

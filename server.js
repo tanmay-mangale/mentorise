@@ -136,3 +136,21 @@ app.post("/ai",async (req,res)=>{
         "result":result        
     })
 })
+
+//mentor directory
+app.get("/mentor-directory", async (req, res) => {
+  try {
+    const snapshot = await database.ref("mentors").once("value");
+    const mentorsData = snapshot.val();
+
+    // Convert Firebase object → array
+    const mentors = mentorsData
+      ? Object.keys(mentorsData).map(id => ({ id, ...mentorsData[id] }))
+      : [];
+
+    res.render("mentor-directory", { mentors });
+  } catch (error) {
+    console.error("Error fetching mentors:", error.message);
+    res.status(500).send("Error loading mentors");
+  }
+});

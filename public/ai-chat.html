@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mentor AI Chat - Mentorise</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f4ff",
+                500: "#3A5BA0",
+                600: "#2F3C7E",
+                700: "#1e2a4a",
+              },
+              secondary: {
+                50: "#fffbf0",
+                500: "#FFD447",
+                600: "#e6bf40",
+              },
+              neutral: {
+                50: "#F5F7FA",
+                100: "#e5e7eb",
+                200: "#d1d5db",
+                600: "#555555",
+                800: "#222222",
+              },
+            },
+            fontFamily: {
+              heading: ["Poppins", "Inter", "sans-serif"],
+              body: ["Roboto", "Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- External Stylesheets -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-neutral-50 font-body h-screen flex flex-col">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <a href="/home">
+                <h1 class="text-2xl font-bold text-primary-500 font-heading">
+                  Mentorise
+                </h1>
+              </a>
+            </div>
+          </div>
+
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a
+                href="/home"
+                class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+              >
+              <a
+                href="mentors.html"
+                class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Mentors</a
+              >
+              <a
+                href="mentee-profile.html"
+                class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Profile</a
+              >
+            </div>
+          </div>
+
+          <div class="md:hidden">
+            <button
+              id="mobile-menu-button"
+              class="text-neutral-800 hover:text-primary-500 p-2"
+            >
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a
+            href="/home"
+            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="mentors.html"
+            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
+            >Mentors</a
+          >
+          <a
+            href="mentee-profile.html"
+            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
+            >Profile</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div
+      class="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 overflow-hidden"
+    >
+      <!-- Chat Header -->
+      <div
+        class="bg-white rounded-t-2xl shadow-sm border-b border-neutral-200 px-6 py-4"
+      >
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-semibold text-neutral-800 font-heading">
+              Mentor AI
+            </h2>
+            <p class="text-sm text-neutral-600">
+              Your intelligent mentoring assistant
+            </p>
+          </div>
+          <div class="ml-auto">
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+            >
+              <span class="w-2 h-2 bg-green-400 rounded-full mr-1.5"></span>
+              Online
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Messages Area -->
+      <div
+        id="chat-messages"
+        class="flex-1 bg-white px-6 py-4 overflow-y-auto custom-scrollbar"
+      >
+        <div class="space-y-4">
+          <!-- Welcome Message -->
+          <div class="flex items-start space-x-3">
+            <div class="flex-1">
+              <!--bot-->
+              <!-- <div
+                class="rounded-2xl rounded-tl-sm px-4 py-3 max-w-sm lg:max-w-2xl"
+              >
+                <p class="text-neutral-800 text-sm">
+                  loHello! I'm Mentor AI, your intelligent mentoring assistant.
+                  I'm here to help you with academic guidance, career advice,
+                  and personal development. How can I assist you today? Lorem
+                  ipsum dolor sit amet consectetur, adipisicing elit. Vero
+                  praesentium nam debitis ut maxime a officia saepe ducimus
+                  voluptas eligendi amet nostrum error, exercitationem
+                  repellendus ullam velit. Amet, possimus atque?
+                </p>
+              </div> -->
+              <!--user-->
+              <!-- <div
+                class="bg-primary-500 text-white rounded-2xl rounded-tr-sm px-4 mb-2 py-3 max-w-[80%] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ml-auto break-words overflow-hidden"
+              >
+                <p class="text-sm break-words whitespace-pre-wrap">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut
+                  hic inventore error fugit, incidunt sunt laboriosam aliquam
+                  quibusdam. Nobis similique ipsam quis iure soluta repudiandae
+                  numquam minima placeat veniam officia?
+                </p>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Area -->
+      <div
+        class="bg-white rounded-b-2xl shadow-sm border-t border-neutral-200 px-6 py-4"
+      >
+        <div class="flex items-end space-x-3">
+          <div class="flex-1">
+            <textarea
+              id="message-input"
+              placeholder="Type your message here..."
+              class="w-full resize-none border border-neutral-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              rows="1"
+              maxlength="500"
+            ></textarea>
+          </div>
+          <button
+            id="send-button"
+            class="bg-primary-500 hover:bg-primary-600 text-white rounded-xl mb-2 px-4 py-3"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const userMsg = document.getElementById("message-input");
+      const Container = document.getElementById("chat-messages");
+      const btn = document.getElementById("send-button");
+
+      async function generateMsg(text) {
+        const messageDiv = document.createElement("div");
+        const messageDiv2 = document.createElement("div");
+        messageDiv.className = "flex items-start space-x-3";
+        messageDiv2.className = "flex-1";
+        messageDiv.className += " flex-row-reverse space-x-reverse";
+        const msg = document.createElement("div");
+        const txt = document.createElement("p");
+        msg.className =
+          "bg-primary-500 text-white rounded-2xl rounded-tr-sm px-4 mb-2 py-3 max-w-[80%] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ml-auto break-words overflow-hidden";
+        txt.innerText = text;
+        txt.className = "text-sm break-words whitespace-pre-wrap";
+        msg.appendChild(txt);
+        messageDiv2.appendChild(msg);
+        Container.appendChild(messageDiv2);
+        userMsg.value = "";
+        const msg2 = document.createElement("div");
+        const aiAns = document.createElement("p");
+        msg2.className =
+          " mb-2 rounded-2xl rounded-tl-sm px-4 py-3 max-w-sm lg:max-w-2xl";
+        aiAns.innerText = await callServer(text);
+        msg2.appendChild(aiAns);
+        messageDiv2.appendChild(msg2);
+      }
+
+      btn.addEventListener("click", (e) => {
+        const text = userMsg.value;
+        console.log(text);
+        generateMsg(text);
+      });
+
+      userMsg.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          if (e.shiftKey) {
+            // Shift+Enter → insert new line
+            return; // do nothing special, allow newline
+          } else {
+            e.preventDefault(); // prevent default newline
+            const text = userMsg.value.trim();
+            if (text) {
+              generateMsg(text); // your function to send message
+            }
+          }
+        }
+      });
+
+      async function callServer(text) {
+        const response = await fetch("http://localhost:8080/ai", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: text }),
+        });
+        let data = await response.json();
+        return data.result;
+      }
+      // Mobile menu functionality
+      function setupMobileMenu() {
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        mobileMenuButton.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (
+            !mobileMenuButton.contains(e.target) &&
+            !mobileMenu.contains(e.target)
+          ) {
+            mobileMenu.classList.add("hidden");
+          }
+        });
+      }
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        setupMobileMenu();
+        messageInput.focus();
+      });
+    </script>
+  </body>
+</html>

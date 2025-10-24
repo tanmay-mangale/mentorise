@@ -1,3 +1,5 @@
+require("dotenv").config();
+const { GoogleGenAI } = require("@google/genai");
 const express=require("express");
 const path=require("path");
 const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
@@ -99,4 +101,38 @@ app.post("/logout",async(req,res)=>{
     }else{
         res.status(500).send("logout falied"+result.message);
     }
+})
+
+//gemini api logic
+
+const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+
+async function generate(userMsg) {
+  try{
+        const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: userMsg,
+        config: {
+        systemInstruction: 'You are a Virtual Career Mentor.created by Mentorise.Your sole purpose is to provide guidance, advice, and insights related to career development. If the user asks about anything unrelated to careers (such as personal life, entertainment, politics, relationships, jokes, or general chit-chat), politely refuse and remind them that you only provide career guidance. Keep answers clear, structured, and practical, with actionable steps whenever possible.you can use emojies.Respond only in plain text. Do not use bold (**)',
+        temperature:0.5
+        },
+    });
+    console.log(response.candidates[0].content.parts[0].text);
+    return response.candidates[0].content.parts[0].text;
+  }catch(e){
+    console.log(e);
+  }
+}
+
+app.get("/ai",(req,res)=>{
+    res.sendFile(path.join(__dirname,"public","ai-chat.html"));
+})
+
+app.post("/ai",async (req,res)=>{
+    let {message}=req.body;
+    console.log(message);
+    const result=await generate(message);
+    res.send({
+        "result":result        
+    })
 })

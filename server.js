@@ -160,19 +160,153 @@ app.post("/ai",async (req,res)=>{
 })
 
 //mentor directory
+//mentor directory
 app.get("/mentor-directory", async (req, res) => {
   try {
+    const menteeId = req.query.menteeId || ''; // Get from query (?menteeId=xxx)
     const snapshot = await database.ref("mentors").once("value");
     const mentorsData = snapshot.val();
 
-    // Convert Firebase object → array
     const mentors = mentorsData
       ? Object.keys(mentorsData).map(id => ({ id, ...mentorsData[id] }))
       : [];
 
-    res.render("mentor-directory", { mentors });
+    res.render("mentor-directory", { mentors, menteeId }); // Pass menteeId to template
   } catch (error) {
     console.error("Error fetching mentors:", error.message);
     res.status(500).send("Error loading mentors");
   }
+});
+
+//booking
+// Add these routes to your server.js file (after your existing routes)
+
+// ============= SESSION BOOKING ROUTES =============
+
+// 1. Book a session - mentee sends request to mentor
+app.post("/book-session", async (req, res) => {
+    try {
+        const { mentorId, menteeId, date, time, message } = req.body;
+        
+        // Fetch mentor details using UID
+        const mentorSnapshot = await database.ref(`mentors/${mentorId}`).once("value");
+        const mentorData = mentorSnapshot.val();
+        
+        // Fetch mentee details using UID
+        const menteeSnapshot = await database.ref(`mentees/${menteeId}`).once("value");
+        const menteeData = menteeSnapshot.val();
+
+        if (!mentorData || !menteeData) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const sessionData = {
+            mentorId,
+            menteeId,
+            mentorName: `${mentorData.firstName} ${mentorData.lastName}`,
+            menteeName: `${menteeData.firstName} ${menteeData.lastName}`,
+            date,
+            time,
+            message: message || "",
+            status: "pending", // pending, accepted, rejected
+            meetLink: "",
+            createdAt: new Date().toISOString()
+        };
+
+        // Save to Firebase with auto-generated ID
+        const sessionRef = database.ref("sessions").push();
+        await sessionRef.set(sessionData);
+
+        res.json({ 
+            success: true, 
+            message: "Session request sent successfully!", 
+            sessionId: sessionRef.key 
+        });
+    } catch (error) {
+        console.error("Error booking session:", error);
+        res.status(500).json({ success: false, message: "Failed to book session" });
+    }
+});
+
+// 2. Get sessions for a mentor (to see incoming requests)
+app.get("/mentor-sessions/:mentorId", async (req, res) => {
+    try {
+        const mentorId = req.params.mentorId;
+        const snapshot = await database.ref("sessions")
+            .orderByChild("mentorId")
+            .equalTo(mentorId)
+            .once("value");
+        
+        const sessions = [];
+        snapshot.forEach((child) => {
+            sessions.push({ id: child.key, ...child.val() });
+        });
+
+        res.json({ success: true, sessions });
+    } catch (error) {
+        console.error("Error fetching mentor sessions:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch sessions" });
+    }
+});
+
+// 3. Get sessions for a mentee (to see their requests)
+app.get("/mentee-sessions/:menteeId", async (req, res) => {
+    try {
+        const menteeId = req.params.menteeId;
+        const snapshot = await database.ref("sessions")
+            .orderByChild("menteeId")
+            .equalTo(menteeId)
+            .once("value");
+        
+        const sessions = [];
+        snapshot.forEach((child) => {
+            sessions.push({ id: child.key, ...child.val() });
+        });
+
+        res.json({ success: true, sessions });
+    } catch (error) {
+        console.error("Error fetching mentee sessions:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch sessions" });
+    }
+});
+
+// 4. Accept or Reject session (mentor action)
+app.post("/update-session", async (req, res) => {
+    try {
+        const { sessionId, status, meetLink } = req.body;
+
+        const updateData = { status };
+        
+        if (status === "accepted" && meetLink) {
+            updateData.meetLink = meetLink;
+            updateData.acceptedAt = new Date().toISOString();
+        } else if (status === "rejected") {
+            updateData.rejectedAt = new Date().toISOString();
+        }
+
+        await database.ref(`sessions/${sessionId}`).update(updateData);
+
+        res.json({ success: true, message: `Session ${status} successfully!` });
+    } catch (error) {
+        console.error("Error updating session:", error);
+        res.status(500).json({ success: false, message: "Failed to update session" });
+    }
+});
+
+// My Bookings page for mentee
+app.get("/my-bookings/:menteeId", async (req, res) => {
+    try {
+        const menteeId = req.params.menteeId;
+        const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
+        const userData = snapshot.val();
+        
+        if (userData) {
+            res.render("my-bookings", { menteeId });
+        } else {
+            res.status(404).send("Mentee not found!");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Server error");
+    }
 });

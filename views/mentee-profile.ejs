@@ -71,7 +71,7 @@
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <a href="/home" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-              <a href="mentee-profile.html" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+              <a href="/mentee-profile/<%= userId %>" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
             </div>
           </div>
 
@@ -91,9 +91,9 @@
 
       <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
         <div class="px-2 pt-2 pb-3 space-y-1">
-          <a href="index.html" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
-          <a href="mentors.html" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Mentors</a>
-          <a href="mentee-profile.html" class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+          <a href="/home" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+          <a href="/mentor-directory" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Mentors</a>
+          <a href="/mentee-profile/<%= userId %>" class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Profile</a>
           <button onclick="logout()" class="text-neutral-800 hover:text-red-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Logout</button>
         </div>
       </div>
@@ -218,10 +218,14 @@
     </div>
 
     <script>
-      document.getElementById("logoutbtn").addEventListener("click",async ()=>{
-        const res= await fetch("/logout",{method:"POST"});
-        if(res.ok) window.location.href = "/login";
-      })
+      // Define the logout function
+      async function logout() {
+        const res = await fetch("/logout", { method: "POST" });
+        if (res.ok) window.location.href = "/login";
+      }
+
+      // Also attach it via event listener as backup
+      document.getElementById("logoutbtn").addEventListener("click", logout);
 
       function setupMobileMenu() {
         const mobileMenuButton = document.getElementById("mobile-menu-button");

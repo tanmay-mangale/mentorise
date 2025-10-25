@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bookings - Mentorise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f4ff",
+                500: "#3A5BA0",
+                600: "#2F3C7E",
+                700: "#1e2a4a",
+              },
+              secondary: {
+                50: "#fffbf0",
+                500: "#FFD447",
+                600: "#e6bf40",
+              },
+              neutral: {
+                50: "#F5F7FA",
+                100: "#e5e7eb",
+                200: "#d1d5db",
+                600: "#555555",
+                800: "#222222",
+              },
+            },
+            fontFamily: {
+              heading: ["Poppins", "Inter", "sans-serif"],
+              body: ["Roboto", "Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  
+  <body class="bg-neutral-50 font-body">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <a href="/home">
+              <h1 class="text-2xl font-bold text-primary-500 font-heading">Mentorise</h1>
+            </a>
+          </div>
+
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <a href="/home" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+              <a href="/mentor-profile/<%= mentorId %>" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profile</a>
+              <a href="/view-requests/<%= mentorId %>" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Requests</a>
+              <a href="/mentor-bookings/<%= mentorId %>" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">My Bookings</a>
+            </div>
+          </div>
+
+          <div class="hidden md:block">
+            <button onclick="logout()" class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              Logout
+            </button>
+          </div>
+
+          <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-neutral-800 hover:text-primary-500 p-2">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+          <a href="/home" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+          <a href="/mentor-profile/<%= mentorId %>" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Profile</a>
+          <a href="/view-requests/<%= mentorId %>" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Requests</a>
+          <a href="/mentor-bookings/<%= mentorId %>" class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium">My Bookings</a>
+          <button onclick="logout()" class="text-neutral-800 hover:text-red-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-neutral-800 mb-4 font-heading">My Bookings</h1>
+        <p class="text-xl text-neutral-600 max-w-3xl mx-auto">
+          Manage your confirmed mentorship sessions and access meeting links.
+        </p>
+      </div>
+
+      <!-- Bookings Container -->
+      <div id="mentorBookingsContainer" class="space-y-6">
+        <div class="text-center py-8 text-gray-500">
+          <i class="fas fa-spinner fa-spin text-3xl mb-3"></i>
+          <p>Loading your scheduled sessions...</p>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-16">
+        <div class="w-24 h-24 bg-neutral-200 rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="fas fa-calendar-times text-neutral-400 text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-neutral-800 mb-2 font-heading">No Bookings Yet</h3>
+        <p class="text-neutral-600 mb-6">
+          You don't have any confirmed sessions yet. Check your requests to accept pending sessions!
+        </p>
+        <button onclick="window.location.href='/view-requests/<%= mentorId %>'" class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors">
+          <i class="fas fa-inbox mr-2"></i>
+          View Requests
+        </button>
+      </div>
+    </main>
+
+    <script>
+      const mentorId = '<%= mentorId %>';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadBookings();
+      });
+
+      async function loadBookings() {
+        try {
+          const response = await fetch(`/mentor-sessions/${mentorId}`);
+          const data = await response.json();
+
+          if (data.success) {
+            // Filter only accepted sessions
+            const acceptedSessions = data.sessions.filter(s => s.status === 'accepted');
+            displayBookings(acceptedSessions);
+          } else {
+            showError('Failed to load bookings');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showError('Failed to load your scheduled sessions');
+        }
+      }
+
+      function displayBookings(sessions) {
+        const container = document.getElementById('mentorBookingsContainer');
+        const emptyState = document.getElementById('emptyState');
+
+        if (sessions.length === 0) {
+          container.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        // Sort by date (upcoming first)
+        sessions.sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time));
+
+        container.innerHTML = sessions.map(session => {
+          const initials = session.menteeName.split(' ').map(n => n[0]).join('');
+          const colors = ['from-blue-400 to-blue-600', 'from-green-400 to-green-600', 'from-purple-400 to-purple-600', 'from-pink-400 to-pink-600', 'from-orange-400 to-orange-600'];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+          const sessionDateTime = new Date(session.date + ' ' + session.time);
+          const isPast = sessionDateTime < new Date();
+          const cardOpacity = isPast ? 'opacity-75' : '';
+
+          return `
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-neutral-100 hover:shadow-xl transition-all duration-300 ${cardOpacity}">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <!-- Mentee Info -->
+                <div class="flex items-center space-x-4">
+                  <div class="w-16 h-16 bg-gradient-to-br ${randomColor} rounded-full flex items-center justify-center shadow-lg">
+                    <span class="text-white text-xl font-bold">${initials}</span>
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-semibold text-neutral-800 font-heading">${session.menteeName}</h3>
+                    <p class="text-neutral-500 text-sm">
+                      <i class="fas fa-calendar mr-2"></i>
+                      ${formatDate(session.date)} at ${formatTime(session.time)}
+                    </p>
+                    <p class="text-neutral-500 text-sm">
+                      <i class="fas fa-clock mr-2"></i>
+                      ${isPast ? 'Completed' : 'Upcoming'}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Session Details -->
+                <div class="flex-1 lg:ml-8">
+                  ${session.message ? `
+                    <div class="mb-4">
+                      <h4 class="font-semibold text-neutral-800 mb-2">Session Topic:</h4>
+                      <p class="text-neutral-600">${session.message}</p>
+                    </div>
+                  ` : ''}
+                  <div class="mb-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="px-3 py-1 rounded-full text-sm font-medium ${isPast ? 'bg-gray-100 text-gray-800' : 'bg-green-100 text-green-800'}">
+                        <i class="fas ${isPast ? 'fa-check' : 'fa-check-circle'} mr-1"></i>
+                        ${isPast ? 'Completed' : 'Confirmed'}
+                      </span>
+                      <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                        <i class="fas fa-video mr-1"></i>
+                        Video Call
+                      </span>
+                    </div>
+                    <div class="text-sm text-neutral-500">
+                      <i class="fas fa-link mr-2"></i>
+                      <span class="font-mono">${session.meetLink}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 lg:flex-col">
+                  ${!isPast ? `
+                    <button onclick="joinMeeting('${session.meetLink}')" class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors flex items-center justify-center">
+                      <i class="fas fa-video mr-2"></i>
+                      Join Meeting
+                    </button>
+                    <button onclick="copyMeetingLink('${session.meetLink}')" class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center">
+                      <i class="fas fa-copy mr-2"></i>
+                      Copy Link
+                    </button>
+                  ` : `
+                    <button onclick="viewSessionNotes('${session.id}')" class="bg-neutral-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-neutral-600 transition-colors flex items-center justify-center">
+                      <i class="fas fa-file-alt mr-2"></i>
+                      View Notes
+                    </button>
+                    <button onclick="sendFollowUp('${session.id}', '${session.menteeName}')" class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center">
+                      <i class="fas fa-envelope mr-2"></i>
+                      Send Follow-up
+                    </button>
+                  `}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function joinMeeting(meetLink) {
+        window.open(meetLink, '_blank');
+      }
+
+      function copyMeetingLink(meetLink) {
+        navigator.clipboard.writeText(meetLink).then(() => {
+          const button = event.target.closest('button');
+          const originalHTML = button.innerHTML;
+          button.innerHTML = '<i class="fas fa-check mr-2"></i>Copied!';
+          button.className = button.className.replace('border-primary-500 text-primary-500', 'bg-green-500 text-white border-green-500');
+          
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.className = button.className.replace('bg-green-500 text-white border-green-500', 'border border-primary-500 text-primary-500');
+          }, 2000);
+        }).catch(() => {
+          alert('❌ Failed to copy link');
+        });
+      }
+
+      function viewSessionNotes(sessionId) {
+        alert('Session notes functionality - You can add notes about the completed session');
+      }
+
+      function sendFollowUp(sessionId, menteeName) {
+        alert(`Send follow-up to ${menteeName} - This would open a message form`);
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+          weekday: 'short',
+          month: 'short', 
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
+
+      function formatTime(timeString) {
+        const [hours, minutes] = timeString.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minutes} ${ampm}`;
+      }
+
+      function showError(message) {
+        document.getElementById('mentorBookingsContainer').innerHTML = `
+          <div class="text-center py-8 text-red-500">
+            <i class="fas fa-exclamation-circle text-3xl mb-3"></i>
+            <p>${message}</p>
+            <button onclick="loadBookings()" class="mt-4 text-primary-500 hover:text-primary-600 font-medium">
+              <i class="fas fa-refresh mr-2"></i>
+              Try Again
+            </button>
+          </div>
+        `;
+      }
+
+      async function logout() {
+        const res = await fetch("/logout", { method: "POST" });
+        if (res.ok) window.location.href = "/login";
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

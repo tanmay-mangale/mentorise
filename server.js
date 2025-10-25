@@ -327,3 +327,23 @@ app.get("/view-requests/:mentorId", async (req, res) => {
         res.status(500).send("Server error");
     }
 });
+
+// Add this route to server.js (after view-requests route)
+
+// Mentor Bookings page - View accepted/scheduled sessions
+app.get("/mentor-bookings/:mentorId", async (req, res) => {
+    try {
+        const mentorId = req.params.mentorId;
+        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+        const userData = snapshot.val();
+        
+        if (userData) {
+            res.render("mentor-bookings", { mentorId });
+        } else {
+            res.status(404).send("Mentor not found!");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Server error");
+    }
+});

@@ -17,7 +17,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const database = firebase.database();
 
-const saveUser = async (userData) => {
+const saveUser = async (userData, uid) => {
   try {
     let node;
     if (userData.userType === "mentee") node = "mentees";
@@ -27,9 +27,10 @@ const saveUser = async (userData) => {
     const dataToSave = { ...userData };
     delete dataToSave.password;
 
-    const newUserRef = database.ref(node).push(); // create a new entry
-    await newUserRef.set(dataToSave);
-    return { success: true, message: "User saved successfully!" };
+    // const newUserRef = database.ref(node).push(); // create a new entry
+    // await newUserRef.set(dataToSave);
+    await database.ref(`${node}/${uid}`).set(dataToSave);
+    return { success: true, message: "User saved successfully!",uid };
   } catch (error) {
     console.error("Error saving user:", error.message);
     return { success: false, message: error.message };

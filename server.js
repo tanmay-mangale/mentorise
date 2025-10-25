@@ -41,58 +41,80 @@ app.post("/signup",async (req,res)=>{
     const result = await signupUser(email, password);
 
     if(result.success){
-        const result = await saveUser(req.body);
+        const saveResult = await saveUser(req.body, result.user.uid); 
         res.send("successful signup");
     } else {
         res.status(400).send(result.message);
     }
 })
 
-app.post("/login",async(req,res)=>{
-    //console.log(req.body);
-    const {email,password}=req.body;
-    const result=await loginUser(email,password);
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    const result = await loginUser(email, password);
 
     if (!result.success) {
         return res.status(404).send(result.message);
     }
 
     try {
-        let userTypeFound = null;
-        let userData = null;
-
-        // Check in mentors
-        const mentorsSnapshot = await database.ref("mentors").once("value");
-        mentorsSnapshot.forEach((child) => {
-            if (child.val().email === email) {
-                userTypeFound = "mentor";
-                userData = child.val();
-            }
-        });
-
-        // Check in mentees if not found in mentors
-        if (!userTypeFound) {
-        const menteesSnapshot = await database.ref("mentees").once("value");
-        menteesSnapshot.forEach((child) => {
-            if (child.val().email === email) {
-            userTypeFound = "mentee";
-            userData = child.val();
-            }
-        });
+        const uid = result.user.uid; // Get UID from auth result
+        
+        // Check in mentors using UID
+        let snapshot = await database.ref(`mentors/${uid}`).once("value");
+        if (snapshot.exists()) {
+            return res.redirect(`/mentor-profile/${uid}`);
         }
 
-        if (userTypeFound === "mentor") {
-            res.render("mentor-profile", { user: userData });
-        } else if (userTypeFound === "mentee") {
-            res.render("mentee-profile", { user: userData });
-        } else {
-            res.status(404).send("User type not found!");
+        // Check in mentees using UID
+        snapshot = await database.ref(`mentees/${uid}`).once("value");
+        if (snapshot.exists()) {
+            return res.redirect(`/mentee-profile/${uid}`);
         }
+
+        res.status(404).send("User type not found!");
     } catch (error) {
         console.error("Error fetching user type:", error);
         res.status(500).send("Server error");
     }
-})
+});
+
+// Add GET routes for mentor profile
+app.get("/mentor-profile/:id", async (req, res) => {
+    try {
+        const mentorId = req.params.id;
+        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+        const userData = snapshot.val();
+        
+        if (userData) {
+            res.render("mentor-profile", { user: userData, userId: mentorId });
+        } else {
+            res.status(404).send("Mentor not found!");
+        }
+    } catch (error) {
+        console.error("Error fetching mentor:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+// Add GET routes for mentee profile
+app.get("/mentee-profile/:id", async (req, res) => {
+    try {
+        const menteeId = req.params.id;
+        const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
+        const userData = snapshot.val();
+        
+        if (userData) {
+            res.render("mentee-profile", { user: userData, userId: menteeId });
+        } else {
+            res.status(404).send("Mentee not found!");
+        }
+    } catch (error) {
+        console.error("Error fetching mentee:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+
 
 app.post("/logout",async(req,res)=>{
     const result =await logoutUser();

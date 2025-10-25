@@ -59,7 +59,7 @@
       .card-hover {
         transition: all 0.2s ease-in-out;
       }
-      
+
       .card-hover:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -69,17 +69,17 @@
       ::-webkit-scrollbar {
         width: 6px;
       }
-      
+
       ::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 3px;
       }
-      
+
       ::-webkit-scrollbar-thumb {
         background: #c1c1c1;
         border-radius: 3px;
       }
-      
+
       ::-webkit-scrollbar-thumb:hover {
         background: #a8a8a8;
       }
@@ -88,10 +88,16 @@
       .fade-in {
         animation: fadeIn 0.3s ease-in-out;
       }
-      
+
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
@@ -102,7 +108,7 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <a href="index.html">
+              <a href="/home">
                 <h1 class="text-2xl font-bold text-primary-500 font-heading">
                   Mentorise
                 </h1>
@@ -112,19 +118,34 @@
 
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a href="index.html" class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-              <a href="mentor-profile.html" class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+              <a
+                href="/home"
+                class="text-neutral-800 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+              >
+              <a
+                href="/mentor-profile/<%= userId %>"
+                class="text-primary-500 px-3 py-2 rounded-md text-sm font-medium"
+                >Profile</a
+              >
             </div>
           </div>
 
           <div class="hidden md:block">
-            <button id="logoutbtn" class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <button
+              id="logoutbtn"
+              onclick="logout()"
+              class="text-neutral-800 hover:text-red-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
               Logout
             </button>
           </div>
 
           <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-neutral-800 hover:text-primary-500 p-2">
+            <button
+              id="mobile-menu-button"
+              class="text-neutral-800 hover:text-primary-500 p-2"
+            >
               <i class="fas fa-bars text-xl"></i>
             </button>
           </div>
@@ -133,9 +154,23 @@
 
       <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
         <div class="px-2 pt-2 pb-3 space-y-1">
-          <a href="index.html" class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
-          <a href="mentor-profile.html" class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium">Profile</a>
-          <button onclick="logout()" class="text-neutral-800 hover:text-red-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Logout</button>
+          <a
+            href="/home"
+            class="text-neutral-800 hover:text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="/mentor-profile/<%= userId %>"
+            class="text-primary-500 block px-3 py-2 rounded-md text-base font-medium"
+            >Profile</a
+          >
+          <button
+            onclick="logout()"
+            id="logoutbtn"
+            class="text-neutral-800 hover:text-red-500 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </nav>
@@ -143,55 +178,66 @@
     <!-- Profile Content -->
     <section class="py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-3xl mx-auto">
-            <div class="bg-white rounded-2xl shadow-lg p-8 border border-neutral-100">
+        <div
+          class="bg-white rounded-2xl shadow-lg p-8 border border-neutral-100"
+        >
           <!-- Profile Header -->
           <div class="text-center mb-8">
             <div class="relative inline-block mb-4">
-              <div class="w-28 h-28 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg mx-auto">
-                    <img
-                      src="<%= user.img %>"
-                      alt="Profile Picture"
-                      class="w-28 h-28 rounded-full object-cover"
-                    />
-                  </div>
-              <div class="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full flex items-center justify-center">
-                    <i class="fas fa-check text-white text-xs"></i>
-                  </div>
-                </div>
-                      <h1 id="profileName" class="text-3xl font-bold text-neutral-800 font-heading mb-2">
-                        <%= user.firstName %> <%= user.lastName %>
-                      </h1>
-                      <p id="profileRole" class="text-neutral-600 text-lg mb-2">
-                        <%= user.currentRole %>
-                      </p>
+              <div
+                class="w-28 h-28 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-lg mx-auto"
+              >
+                <img
+                  src="<%= user.img %>"
+                  alt="Profile Picture"
+                  class="w-28 h-28 rounded-full object-cover"
+                />
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full flex items-center justify-center"
+              >
+                <i class="fas fa-check text-white text-xs"></i>
+              </div>
+            </div>
+            <h1
+              id="profileName"
+              class="text-3xl font-bold text-neutral-800 font-heading mb-2"
+            >
+              <%= user.firstName %> <%= user.lastName %>
+            </h1>
+            <p id="profileRole" class="text-neutral-600 text-lg mb-2">
+              <%= user.currentRole %>
+            </p>
             <p id="profileField" class="text-primary-500 mb-4">
               <i class="fas fa-graduation-cap mr-2"></i>
               <span id="fieldDisplay"><%= user.field %></span>
             </p>
             <div class="flex flex-wrap gap-2 justify-center mb-6">
-              <span id="verificationBadge" class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+              <span
+                id="verificationBadge"
+                class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium"
+              >
                 <i class="fas fa-check-circle mr-2"></i>
-                          Verified Mentor
-                        </span>
-              <span class="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium">
+                Verified Mentor
+              </span>
+              <span
+                class="bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium"
+              >
                 <i class="fas fa-chalkboard-teacher mr-2"></i>
                 Active Mentor
-                        </span>
+              </span>
             </div>
           </div>
 
-
-            <!-- Profile Information -->
+          <!-- Profile Information -->
           <div class="space-y-6">
             <!-- Basic Information -->
-             <div class="border-t border-neutral-200 pt-6">
+            <div class="border-t border-neutral-200 pt-6">
               <h3 class="text-lg font-semibold text-neutral-800 mb-4">
                 <i class="fas fa-circle-info text-primary-500 mr-2"></i>
                 About
               </h3>
-              <div class="text-neutral-600">
-                <%= user.about  %>
-              </div>
+              <div class="text-neutral-600"><%= user.about %></div>
             </div>
             <div class="border-t border-neutral-200 pt-6">
               <h3 class="text-lg font-semibold text-neutral-800 mb-4">
@@ -201,23 +247,39 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex items-center">
                   <i class="fas fa-envelope text-primary-500 mr-3 w-5"></i>
-                  <span id="profileEmail" class="text-neutral-600"><%= user.email %></span>
+                  <span id="profileEmail" class="text-neutral-600"
+                    ><%= user.email %></span
+                  >
                 </div>
                 <div class="flex items-center">
                   <i class="fas fa-briefcase text-primary-500 mr-3 w-5"></i>
-                  <span id="profileRoleDisplay" class="text-neutral-600"><%= user.currentRole  %></span>
+                  <span id="profileRoleDisplay" class="text-neutral-600"
+                    ><%= user.currentRole %></span
+                  >
                 </div>
                 <div class="flex items-center">
-                  <i class="fas fa-graduation-cap text-primary-500 mr-3 w-5"></i>
-                  <span id="profileFieldDisplay" class="text-neutral-600"><%= user.field %></span>
+                  <i
+                    class="fas fa-graduation-cap text-primary-500 mr-3 w-5"
+                  ></i>
+                  <span id="profileFieldDisplay" class="text-neutral-600"
+                    ><%= user.field %></span
+                  >
                 </div>
                 <div class="flex items-center">
                   <i class="fas fa-calendar text-primary-500 mr-3 w-5"></i>
-                  <span id="memberSince" class="text-neutral-600"><%= user.experience %></span>
+                  <span id="memberSince" class="text-neutral-600"
+                    ><%= user.experience %></span
+                  >
                 </div>
                 <div class="flex items-center">
-                  <i class="fa-brands fa-linkedin text-primary-500 text-xl mr-3 w-5"></i>
-                  <span id="linkedin" class="text-neutral-600"><a href="<%= user.linkedin %>"><%= user.linkedin %></a></span>
+                  <i
+                    class="fa-brands fa-linkedin text-primary-500 text-xl mr-3 w-5"
+                  ></i>
+                  <span id="linkedin" class="text-neutral-600"
+                    ><a href="<%= user.linkedin %>"
+                      ><%= user.linkedin %></a
+                    ></span
+                  >
                 </div>
               </div>
             </div>
@@ -229,18 +291,19 @@
                 Areas of Expertise
               </h3>
               <div id="areasList" class="flex flex-wrap gap-2">
-                <% if(user.mentoringAreas && user.mentoringAreas.length > 0) { %>
-                    <% user.mentoringAreas.forEach(area => { %>
-                        <span class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-primary-200 transition-colors">
-                        <%= area %>
-                         </span>
-                    <% }) %>
-                <% } else { %>
-                      <span>No areas selected</span>
+                <% if(user.mentoringAreas && user.mentoringAreas.length > 0) {
+                %> <% user.mentoringAreas.forEach(area => { %>
+                <span
+                  class="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-primary-200 transition-colors"
+                >
+                  <%= area %>
+                </span>
+                <% }) %> <% } else { %>
+                <span>No areas selected</span>
                 <% } %>
               </div>
             </div>
-            </div>
+          </div>
 
           <!-- Action Buttons -->
           <div class="border-t border-neutral-200 pt-6 mt-8">
@@ -252,20 +315,20 @@
                 <i class="fas fa-edit mr-2"></i>
                 Edit Profile
               </button>
-                <button
-                  onclick="viewRequests()"
+              <button
+                onclick="viewRequests()"
                 class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors"
-                >
-                  <i class="fas fa-inbox mr-2"></i>
+              >
+                <i class="fas fa-inbox mr-2"></i>
                 View Requests
-                </button>
-                <button
-                  onclick="scheduleMeeting()"
+              </button>
+              <button
+                onclick="scheduleMeeting()"
                 class="border border-secondary-500 text-secondary-600 px-6 py-3 rounded-lg font-medium hover:bg-secondary-50 transition-colors"
-                >
-                  <i class="fas fa-plus mr-2"></i>
-                  Schedule Meeting
-                </button>
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Schedule Meeting
+              </button>
             </div>
           </div>
         </div>
@@ -273,12 +336,16 @@
     </section>
 
     <script>
-      document.getElementById("logoutbtn").addEventListener("click",async ()=>{
-        const res= await fetch("/logout",{method:"POST"});
-        if(res.ok) window.location.href = "/login";
-      })
+      // Define the logout function
+      async function logout() {
+        const res = await fetch("/logout", { method: "POST" });
+        if (res.ok) window.location.href = "/login";
+      }
 
-      document.addEventListener('DOMContentLoaded', function() {
+      // Also attach it via event listener as backup
+      document.getElementById("logoutbtn").addEventListener("click", logout);
+
+      document.addEventListener("DOMContentLoaded", function () {
         setupMobileMenu();
       });
 
@@ -287,13 +354,16 @@
         const mobileMenu = document.getElementById("mobile-menu");
 
         if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener("click", () => {
-          mobileMenu.classList.toggle("hidden");
-        });
+          mobileMenuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+          });
 
-        document.addEventListener("click", (e) => {
-          if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-            mobileMenu.classList.add("hidden");
+          document.addEventListener("click", (e) => {
+            if (
+              !mobileMenuButton.contains(e.target) &&
+              !mobileMenu.contains(e.target)
+            ) {
+              mobileMenu.classList.add("hidden");
             }
           });
         }

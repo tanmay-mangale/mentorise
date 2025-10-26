@@ -120,10 +120,12 @@
                             <i class="fas fa-comments mr-1"></i>
                             Chat
                         </button>
-                        <button onclick="bookSession('Arjun Patel')" class="flex-1 border-2 border-primary-500  text-primary-500 py-2 px-3 rounded-lg  transition-colors duration-200 font-medium text-sm">
+                        <button onclick="openBookingModal('<%= mentor.id %>', '<%= mentor.firstName %> <%= mentor.lastName %>')" 
+                                class="flex-1 border-2 border-primary-500 text-primary-500 py-2 px-3 rounded-lg hover:bg-primary-50 transition-colors duration-200 font-medium text-sm">
                             <i class="fas fa-calendar-plus mr-1"></i>
                             Book Session
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -152,9 +154,107 @@
             </div>
         </div>
     </footer> -->
+    <!-- Add this modal at the bottom of your mentor-directory.ejs file (before closing </body> tag) -->
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"></div>
+    
+    <!-- Modal Content -->
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all">
+            
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    <i class="fas fa-calendar-plus text-primary-500 mr-2"></i>
+                    Book a Session
+                </h2>
+                <button onclick="closeBookingModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mentor Info -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-gray-700">
+                    <i class="fas fa-user-tie text-primary-500 mr-2"></i>
+                    Booking with: <span id="mentorNameDisplay" class="font-semibold text-gray-900"></span>
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-5">
+                
+                <!-- Date Input -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                        <i class="fas fa-calendar text-primary-500 mr-2"></i>
+                        Select Date
+                    </label>
+                    <input 
+                        type="date" 
+                        id="sessionDate" 
+                        required 
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                    >
+                </div>
+
+                <!-- Time Input -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                        <i class="fas fa-clock text-primary-500 mr-2"></i>
+                        Select Time
+                    </label>
+                    <input 
+                        type="time" 
+                        id="sessionTime" 
+                        required 
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+                    >
+                </div>
+
+                <!-- Message Input -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                        <i class="fas fa-message text-primary-500 mr-2"></i>
+                        Purpose of Session (Optional)
+                    </label>
+                    <textarea 
+                        id="sessionMessage" 
+                        rows="3" 
+                        placeholder="E.g., Career guidance, Resume review, Interview preparation..."
+                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 pt-2">
+                    <button 
+                        type="button" 
+                        onclick="closeBookingModal()" 
+                        class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="flex-1 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors font-medium shadow-lg hover:shadow-xl"
+                    >
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     <!-- JavaScript -->
     <script>
+        const menteeId = '<%= menteeId %>';
+    localStorage.setItem('userId', menteeId);
         // Fade-in animation on scroll
         function handleScrollAnimation() {
             const elements = document.querySelectorAll('.fade-in');
@@ -170,6 +270,106 @@
             });
         }
 
+        let currentMentorId = null;
+    let currentMentorName = null;
+
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('sessionDate');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    });
+
+    // Open booking modal
+    function openBookingModal(mentorId, mentorName) {
+        currentMentorId = mentorId;
+        currentMentorName = mentorName;
+        
+        document.getElementById('mentorNameDisplay').textContent = mentorName;
+        document.getElementById('bookingModal').classList.remove('hidden');
+        document.getElementById('bookingModal').classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    // Close booking modal
+    function closeBookingModal() {
+        document.getElementById('bookingModal').classList.add('hidden');
+        document.getElementById('bookingModal').classList.remove('show');
+        document.getElementById('bookingForm').reset();
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+    }
+
+    // Submit booking
+    async function submitBooking(event) {
+        event.preventDefault();
+
+        const date = document.getElementById('sessionDate').value;
+        const time = document.getElementById('sessionTime').value;
+        const message = document.getElementById('sessionMessage').value;
+
+        // Get mentee ID from URL or localStorage
+        // You need to pass menteeId when redirecting to this page
+        const menteeId = getMenteeId();
+
+        if (!menteeId) {
+            alert('Please login as a mentee to book a session');
+            return;
+        }
+
+        try {
+            const response = await fetch('/book-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mentorId: currentMentorId,
+                    menteeId: menteeId,
+                    date: date,
+                    time: time,
+                    message: message
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('✅ Session request sent successfully! The mentor will review your request.');
+                closeBookingModal();
+            } else {
+                alert('❌ Failed to send request: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('❌ An error occurred. Please try again.');
+        }
+    }
+
+    // Helper function to get mentee ID
+    // Option 1: From URL parameter (if you pass it in the route)
+    function getMenteeId() {
+        // Check if menteeId is stored in localStorage
+        const menteeId = localStorage.getItem('userId');
+        if (menteeId) return menteeId;
+
+        // Or get from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('menteeId');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('bookingModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeBookingModal();
+        }
+    });
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeBookingModal();
+        }
+    });
         // Add scroll event listener
         window.addEventListener('scroll', handleScrollAnimation);
         

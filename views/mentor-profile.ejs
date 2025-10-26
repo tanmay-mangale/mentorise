@@ -309,13 +309,6 @@
           <div class="border-t border-neutral-200 pt-6 mt-8">
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onclick="editProfile()"
-                class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors"
-              >
-                <i class="fas fa-edit mr-2"></i>
-                Edit Profile
-              </button>
-              <button
                 onclick="window.location.href='/view-requests/<%= userId %>'"
                 class="border border-primary-500 text-primary-500 px-6 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors"
               >
@@ -328,6 +321,14 @@
               >
                 <i class="fas fa-calendar mr-2"></i>
                 Scheduled Meetings
+              </button>
+              <!-- Add this button in the action buttons section -->
+              <button
+                onclick="window.location.href='/mentor-chats/<%= userId %>'"
+                class="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+              >
+                <i class="fas fa-comments mr-2"></i>
+                My Chats
               </button>
             </div>
           </div>

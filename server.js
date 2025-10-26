@@ -2,10 +2,14 @@ require("dotenv").config();
 const { GoogleGenAI } = require("@google/genai");
 const express=require("express");
 const path=require("path");
+const http = require('http');
+const socketIO = require('socket.io');
 const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
 
 const app=express();
 const port=8080;
+const server = http.createServer(app);
+const io = socketIO(server);    
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -13,11 +17,36 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-app.listen(port,()=>{
-    console.log("server started");
-})
+server.listen(port, () => {
+    console.log("server started on port " + port);
+});
 
 app.use(express.static(path.join(__dirname,"public")))
+
+// Socket.IO Chat Logic (add before your routes)
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    // Join a chat room
+    socket.on('join-chat', ({ roomId, userName }) => {
+        socket.join(roomId);
+        console.log(`${userName} joined room: ${roomId}`);
+    });
+
+    // Send message
+    socket.on('send-message', ({ roomId, message, sender, senderName }) => {
+        io.to(roomId).emit('receive-message', {
+            message,
+            sender,
+            senderName,
+            timestamp: new Date().toISOString()
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+});
 
 app.get("/",(req,res)=>{
     res.redirect("/home");
@@ -339,6 +368,117 @@ app.get("/mentor-bookings/:mentorId", async (req, res) => {
         
         if (userData) {
             res.render("mentor-bookings", { mentorId });
+        } else {
+            res.status(404).send("Mentor not found!");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+// chatting using socket.io
+// Add this route to server.js
+
+// Chat page
+// Replace your /chat route with this:
+app.get("/chat/:currentUserId/:otherUserId", async (req, res) => {
+    try {
+        const currentUserId = req.params.currentUserId;
+        const otherUserId = req.params.otherUserId;
+
+        // Get current user data
+        let currentUserSnapshot = await database.ref(`mentees/${currentUserId}`).once("value");
+        let currentUserData = currentUserSnapshot.val();
+        let currentUserType = 'mentee';
+
+        if (!currentUserData) {
+            currentUserSnapshot = await database.ref(`mentors/${currentUserId}`).once("value");
+            currentUserData = currentUserSnapshot.val();
+            currentUserType = 'mentor';
+        }
+
+        // Get other user data
+        let otherUserSnapshot = await database.ref(`mentees/${otherUserId}`).once("value");
+        let otherUserData = otherUserSnapshot.val();
+
+        if (!otherUserData) {
+            otherUserSnapshot = await database.ref(`mentors/${otherUserId}`).once("value");
+            otherUserData = otherUserSnapshot.val();
+        }
+
+        if (currentUserData && otherUserData) {
+            // Store chat contact in Firebase
+            const chatId = [currentUserId, otherUserId].sort().join('_');
+            await database.ref(`chats/${chatId}`).set({
+                users: [currentUserId, otherUserId],
+                user1: {
+                    id: currentUserId,
+                    name: `${currentUserData.firstName} ${currentUserData.lastName}`
+                },
+                user2: {
+                    id: otherUserId,
+                    name: `${otherUserData.firstName} ${otherUserData.lastName}`
+                },
+                lastActivity: new Date().toISOString()
+            });
+
+            res.render("chat", {
+                currentUserId,
+                currentUserName: `${currentUserData.firstName} ${currentUserData.lastName}`,
+                otherUserId,
+                otherUserName: `${otherUserData.firstName} ${otherUserData.lastName}`
+            });
+        } else {
+            res.status(404).send("User not found!");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Server error");
+    }
+});
+
+// Get chat contacts for a mentor
+app.get("/mentor-chat-contacts/:mentorId", async (req, res) => {
+    try {
+        const mentorId = req.params.mentorId;
+        const snapshot = await database.ref("chats").once("value");
+        const chatsData = snapshot.val();
+
+        const contacts = [];
+        
+        if (chatsData) {
+            for (let chatId in chatsData) {
+                const chat = chatsData[chatId];
+                if (chat.users.includes(mentorId)) {
+                    // Find the other user (mentee)
+                    const otherUserId = chat.users.find(id => id !== mentorId);
+                    const otherUser = chat.user1.id === otherUserId ? chat.user1 : chat.user2;
+                    
+                    contacts.push({
+                        id: otherUser.id,
+                        name: otherUser.name
+                    });
+                }
+            }
+        }
+
+        res.json({ success: true, contacts });
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch contacts" });
+    }
+});
+
+// Mentor Chats List page
+app.get("/mentor-chats/:mentorId", async (req, res) => {
+    try {
+        const mentorId = req.params.mentorId;
+        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+        const userData = snapshot.val();
+        
+        if (userData) {
+            res.render("mentor-chats", { mentorId });
         } else {
             res.status(404).send("Mentor not found!");
         }

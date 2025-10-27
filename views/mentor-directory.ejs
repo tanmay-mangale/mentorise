@@ -116,7 +116,7 @@
                         <%= mentor.about  %>
                     </p>
                     <div class="flex gap-2">
-                        <button onclick="chatWithMentor('Arjun Patel')" class="flex-1 bg-primary-500 text-white py-2 px-3 rounded-lg hover:bg-primary-600 transition-colors duration-200 font-medium text-sm">
+                        <button onclick="openChat('<%= mentor.id %>')" class="flex-1 bg-primary-500 text-white py-2 px-3 rounded-lg hover:bg-primary-600 transition-colors duration-200 font-medium text-sm">
                             <i class="fas fa-comments mr-1"></i>
                             Chat
                         </button>
@@ -392,6 +392,16 @@
             // 2. Allow mentee to select preferred time
             // 3. Send booking request to mentor
             // 4. Confirm booking via email/SMS
+        }
+
+        // Add this function to the script section
+        function openChat(mentorId) {
+            const menteeId = getMenteeId();
+            if (!menteeId) {
+                alert('Please login to chat');
+                return;
+            }
+            window.location.href = `/chat/${menteeId}/${mentorId}`;
         }
     </script>
 </body>

@@ -7,7 +7,7 @@ const socketIO = require('socket.io');
 const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
 
 const app=express();
-const port=8080;
+const port=process.env.PORT || 8080; // required for render
 const server = http.createServer(app);
 const io = socketIO(server);    
 

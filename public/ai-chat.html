@@ -278,7 +278,7 @@
       });
 
       async function callServer(text) {
-        const response = await fetch("http://localhost:8080/ai", {
+        const response = await fetch("/ai", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

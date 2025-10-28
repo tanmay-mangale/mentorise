@@ -1,203 +1,212 @@
 require("dotenv").config();
-const { GoogleGenAI } = require("@google/genai");
-const express=require("express");
-const path=require("path");
-const http = require('http');
-const socketIO = require('socket.io');
-const { signupUser,loginUser,saveUser,database,logoutUser } = require("./firebase");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const express = require("express");
+const path = require("path");
+const http = require("http");
+const socketIO = require("socket.io");
+const {
+  signupUser,
+  loginUser,
+  saveUser,
+  database,
+  logoutUser,
+} = require("./firebase");
 
-const app=express();
-const port=process.env.PORT || 8080; // required for render
+const app = express();
+const port = process.env.PORT || 8080; // required for render
 const server = http.createServer(app);
-const io = socketIO(server);    
+const io = socketIO(server);
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 server.listen(port, () => {
-    console.log("server started on port " + port);
+  console.log("server started on port " + port);
 });
 
-app.use(express.static(path.join(__dirname,"public")))
+app.use(express.static(path.join(__dirname, "public")));
 
 // Socket.IO Chat Logic (add before your routes)
-io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
 
-    // Join a chat room
-    socket.on('join-chat', ({ roomId, userName }) => {
-        socket.join(roomId);
-        console.log(`${userName} joined room: ${roomId}`);
-    });
+  // Join a chat room
+  socket.on("join-chat", ({ roomId, userName }) => {
+    socket.join(roomId);
+    console.log(`${userName} joined room: ${roomId}`);
+  });
 
-    // Send message
-    socket.on('send-message', ({ roomId, message, sender, senderName }) => {
-        io.to(roomId).emit('receive-message', {
-            message,
-            sender,
-            senderName,
-            timestamp: new Date().toISOString()
-        });
+  // Send message
+  socket.on("send-message", ({ roomId, message, sender, senderName }) => {
+    io.to(roomId).emit("receive-message", {
+      message,
+      sender,
+      senderName,
+      timestamp: new Date().toISOString(),
     });
+  });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    });
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
 });
 
-app.get("/",(req,res)=>{
-    res.redirect("/home");
-})
+app.get("/", (req, res) => {
+  res.redirect("/home");
+});
 
-app.get("/home",(req,res)=>{
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-})
+app.get("/home", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-app.get("/login",(req,res)=>{
-    res.sendFile(path.join(__dirname, 'public', 'Login.html'));
-})
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "Login.html"));
+});
 
-app.get("/signup",(req,res)=>{
-    res.sendFile(path.join(__dirname, 'public', 'signup.html'));
-})
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "signup.html"));
+});
 
-app.post("/signup",async (req,res)=>{
-    console.log(req.body);
-    const {email,password}=req.body;
-    const result = await signupUser(email, password);
+app.post("/signup", async (req, res) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+  const result = await signupUser(email, password);
 
-    if(result.success){
-        const saveResult = await saveUser(req.body, result.user.uid); 
-        res.send("successful signup");
-    } else {
-        res.status(400).send(result.message);
-    }
-})
+  if (result.success) {
+    const saveResult = await saveUser(req.body, result.user.uid);
+    res.send("successful signup");
+  } else {
+    res.status(400).send(result.message);
+  }
+});
 
 app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    const result = await loginUser(email, password);
+  const { email, password } = req.body;
+  const result = await loginUser(email, password);
 
-    if (!result.success) {
-        return res.status(404).send(result.message);
+  if (!result.success) {
+    return res.status(404).send(result.message);
+  }
+
+  try {
+    const uid = result.user.uid; // Get UID from auth result
+
+    // Check in mentors using UID
+    let snapshot = await database.ref(`mentors/${uid}`).once("value");
+    if (snapshot.exists()) {
+      return res.redirect(`/mentor-profile/${uid}`);
     }
 
-    try {
-        const uid = result.user.uid; // Get UID from auth result
-        
-        // Check in mentors using UID
-        let snapshot = await database.ref(`mentors/${uid}`).once("value");
-        if (snapshot.exists()) {
-            return res.redirect(`/mentor-profile/${uid}`);
-        }
-
-        // Check in mentees using UID
-        snapshot = await database.ref(`mentees/${uid}`).once("value");
-        if (snapshot.exists()) {
-            return res.redirect(`/mentee-profile/${uid}`);
-        }
-
-        res.status(404).send("User type not found!");
-    } catch (error) {
-        console.error("Error fetching user type:", error);
-        res.status(500).send("Server error");
+    // Check in mentees using UID
+    snapshot = await database.ref(`mentees/${uid}`).once("value");
+    if (snapshot.exists()) {
+      return res.redirect(`/mentee-profile/${uid}`);
     }
+
+    res.status(404).send("User type not found!");
+  } catch (error) {
+    console.error("Error fetching user type:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Add GET routes for mentor profile
 app.get("/mentor-profile/:id", async (req, res) => {
-    try {
-        const mentorId = req.params.id;
-        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("mentor-profile", { user: userData, userId: mentorId });
-        } else {
-            res.status(404).send("Mentor not found!");
-        }
-    } catch (error) {
-        console.error("Error fetching mentor:", error);
-        res.status(500).send("Server error");
+  try {
+    const mentorId = req.params.id;
+    const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("mentor-profile", { user: userData, userId: mentorId });
+    } else {
+      res.status(404).send("Mentor not found!");
     }
+  } catch (error) {
+    console.error("Error fetching mentor:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Add GET routes for mentee profile
 app.get("/mentee-profile/:id", async (req, res) => {
-    try {
-        const menteeId = req.params.id;
-        const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("mentee-profile", { user: userData, userId: menteeId });
-        } else {
-            res.status(404).send("Mentee not found!");
-        }
-    } catch (error) {
-        console.error("Error fetching mentee:", error);
-        res.status(500).send("Server error");
+  try {
+    const menteeId = req.params.id;
+    const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("mentee-profile", { user: userData, userId: menteeId });
+    } else {
+      res.status(404).send("Mentee not found!");
     }
+  } catch (error) {
+    console.error("Error fetching mentee:", error);
+    res.status(500).send("Server error");
+  }
 });
 
-
-
-app.post("/logout",async(req,res)=>{
-    const result =await logoutUser();
-    if(result.success){
-        res.redirect("/login");
-    }else{
-        res.status(500).send("logout falied"+result.message);
-    }
-})
+app.post("/logout", async (req, res) => {
+  const result = await logoutUser();
+  if (result.success) {
+    res.redirect("/login");
+  } else {
+    res.status(500).send("logout falied" + result.message);
+  }
+});
 
 //gemini api logic
 
-const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 async function generate(userMsg) {
-  try{
-        const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: userMsg,
-        config: {
-        systemInstruction: 'You are a Virtual Career Mentor.created by Mentorise.Your sole purpose is to provide guidance, advice, and insights related to career development. If the user asks about anything unrelated to careers (such as personal life, entertainment, politics, relationships, jokes, or general chit-chat), politely refuse and remind them that you only provide career guidance. Keep answers clear, structured, and practical, with actionable steps whenever possible.you can use emojies.Respond only in plain text. Do not use bold (**)',
-        temperature:0.5
-        },
-    });
-    console.log(response.candidates[0].content.parts[0].text);
-    return response.candidates[0].content.parts[0].text;
-  }catch(e){
-    console.log(e);
+  try {
+    const prompt = `
+You are a Virtual Career Mentor created by Mentorise.
+Your sole purpose is to provide guidance on *career development only*.
+If user asks anything unrelated (relationships, gossip, jokes, personal life),
+politely refuse and remind them of your purpose.
+Keep answers clear, structured, practical, and include emojis.
+Do NOT use bold formatting.
+
+User: ${userMsg}
+    `;
+
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  } catch (err) {
+    console.error("Gemini Error:", err.message);
+    return "AI is currently unavailable. Please try again shortly 🙏";
   }
 }
 
-app.get("/ai",(req,res)=>{
-    res.sendFile(path.join(__dirname,"public","ai-chat.html"));
-})
+app.get("/ai", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "ai-chat.html"));
+});
 
-app.post("/ai",async (req,res)=>{
-    let {message}=req.body;
-    console.log(message);
-    const result=await generate(message);
-    res.send({
-        "result":result        
-    })
-})
+app.post("/ai", async (req, res) => {
+  let { message } = req.body;
+  console.log(message);
+  const result = await generate(message);
+  res.send({
+    result: result,
+  });
+});
 
 //mentor directory
 //mentor directory
 app.get("/mentor-directory", async (req, res) => {
   try {
-    const menteeId = req.query.menteeId || ''; // Get from query (?menteeId=xxx)
+    const menteeId = req.query.menteeId || ""; // Get from query (?menteeId=xxx)
     const snapshot = await database.ref("mentors").once("value");
     const mentorsData = snapshot.val();
 
     const mentors = mentorsData
-      ? Object.keys(mentorsData).map(id => ({ id, ...mentorsData[id] }))
+      ? Object.keys(mentorsData).map((id) => ({ id, ...mentorsData[id] }))
       : [];
 
     res.render("mentor-directory", { mentors, menteeId }); // Pass menteeId to template
@@ -214,167 +223,181 @@ app.get("/mentor-directory", async (req, res) => {
 
 // 1. Book a session - mentee sends request to mentor
 app.post("/book-session", async (req, res) => {
-    try {
-        const { mentorId, menteeId, date, time, message } = req.body;
-        
-        // Fetch mentor details using UID
-        const mentorSnapshot = await database.ref(`mentors/${mentorId}`).once("value");
-        const mentorData = mentorSnapshot.val();
-        
-        // Fetch mentee details using UID
-        const menteeSnapshot = await database.ref(`mentees/${menteeId}`).once("value");
-        const menteeData = menteeSnapshot.val();
+  try {
+    const { mentorId, menteeId, date, time, message } = req.body;
 
-        if (!mentorData || !menteeData) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
+    // Fetch mentor details using UID
+    const mentorSnapshot = await database
+      .ref(`mentors/${mentorId}`)
+      .once("value");
+    const mentorData = mentorSnapshot.val();
 
-        const sessionData = {
-            mentorId,
-            menteeId,
-            mentorName: `${mentorData.firstName} ${mentorData.lastName}`,
-            menteeName: `${menteeData.firstName} ${menteeData.lastName}`,
-            date,
-            time,
-            message: message || "",
-            status: "pending", // pending, accepted, rejected
-            meetLink: "",
-            createdAt: new Date().toISOString()
-        };
+    // Fetch mentee details using UID
+    const menteeSnapshot = await database
+      .ref(`mentees/${menteeId}`)
+      .once("value");
+    const menteeData = menteeSnapshot.val();
 
-        // Save to Firebase with auto-generated ID
-        const sessionRef = database.ref("sessions").push();
-        await sessionRef.set(sessionData);
-
-        res.json({ 
-            success: true, 
-            message: "Session request sent successfully!", 
-            sessionId: sessionRef.key 
-        });
-    } catch (error) {
-        console.error("Error booking session:", error);
-        res.status(500).json({ success: false, message: "Failed to book session" });
+    if (!mentorData || !menteeData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
+
+    const sessionData = {
+      mentorId,
+      menteeId,
+      mentorName: `${mentorData.firstName} ${mentorData.lastName}`,
+      menteeName: `${menteeData.firstName} ${menteeData.lastName}`,
+      date,
+      time,
+      message: message || "",
+      status: "pending", // pending, accepted, rejected
+      meetLink: "",
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to Firebase with auto-generated ID
+    const sessionRef = database.ref("sessions").push();
+    await sessionRef.set(sessionData);
+
+    res.json({
+      success: true,
+      message: "Session request sent successfully!",
+      sessionId: sessionRef.key,
+    });
+  } catch (error) {
+    console.error("Error booking session:", error);
+    res.status(500).json({ success: false, message: "Failed to book session" });
+  }
 });
 
 // 2. Get sessions for a mentor (to see incoming requests)
 app.get("/mentor-sessions/:mentorId", async (req, res) => {
-    try {
-        const mentorId = req.params.mentorId;
-        const snapshot = await database.ref("sessions")
-            .orderByChild("mentorId")
-            .equalTo(mentorId)
-            .once("value");
-        
-        const sessions = [];
-        snapshot.forEach((child) => {
-            sessions.push({ id: child.key, ...child.val() });
-        });
+  try {
+    const mentorId = req.params.mentorId;
+    const snapshot = await database
+      .ref("sessions")
+      .orderByChild("mentorId")
+      .equalTo(mentorId)
+      .once("value");
 
-        res.json({ success: true, sessions });
-    } catch (error) {
-        console.error("Error fetching mentor sessions:", error);
-        res.status(500).json({ success: false, message: "Failed to fetch sessions" });
-    }
+    const sessions = [];
+    snapshot.forEach((child) => {
+      sessions.push({ id: child.key, ...child.val() });
+    });
+
+    res.json({ success: true, sessions });
+  } catch (error) {
+    console.error("Error fetching mentor sessions:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch sessions" });
+  }
 });
 
 // 3. Get sessions for a mentee (to see their requests)
 app.get("/mentee-sessions/:menteeId", async (req, res) => {
-    try {
-        const menteeId = req.params.menteeId;
-        const snapshot = await database.ref("sessions")
-            .orderByChild("menteeId")
-            .equalTo(menteeId)
-            .once("value");
-        
-        const sessions = [];
-        snapshot.forEach((child) => {
-            sessions.push({ id: child.key, ...child.val() });
-        });
+  try {
+    const menteeId = req.params.menteeId;
+    const snapshot = await database
+      .ref("sessions")
+      .orderByChild("menteeId")
+      .equalTo(menteeId)
+      .once("value");
 
-        res.json({ success: true, sessions });
-    } catch (error) {
-        console.error("Error fetching mentee sessions:", error);
-        res.status(500).json({ success: false, message: "Failed to fetch sessions" });
-    }
+    const sessions = [];
+    snapshot.forEach((child) => {
+      sessions.push({ id: child.key, ...child.val() });
+    });
+
+    res.json({ success: true, sessions });
+  } catch (error) {
+    console.error("Error fetching mentee sessions:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch sessions" });
+  }
 });
 
 // 4. Accept or Reject session (mentor action)
 app.post("/update-session", async (req, res) => {
-    try {
-        const { sessionId, status, meetLink } = req.body;
+  try {
+    const { sessionId, status, meetLink } = req.body;
 
-        const updateData = { status };
-        
-        if (status === "accepted" && meetLink) {
-            updateData.meetLink = meetLink;
-            updateData.acceptedAt = new Date().toISOString();
-        } else if (status === "rejected") {
-            updateData.rejectedAt = new Date().toISOString();
-        }
+    const updateData = { status };
 
-        await database.ref(`sessions/${sessionId}`).update(updateData);
-
-        res.json({ success: true, message: `Session ${status} successfully!` });
-    } catch (error) {
-        console.error("Error updating session:", error);
-        res.status(500).json({ success: false, message: "Failed to update session" });
+    if (status === "accepted" && meetLink) {
+      updateData.meetLink = meetLink;
+      updateData.acceptedAt = new Date().toISOString();
+    } else if (status === "rejected") {
+      updateData.rejectedAt = new Date().toISOString();
     }
+
+    await database.ref(`sessions/${sessionId}`).update(updateData);
+
+    res.json({ success: true, message: `Session ${status} successfully!` });
+  } catch (error) {
+    console.error("Error updating session:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update session" });
+  }
 });
 
 // My Bookings page for mentee
 app.get("/my-bookings/:menteeId", async (req, res) => {
-    try {
-        const menteeId = req.params.menteeId;
-        const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("my-bookings", { menteeId });
-        } else {
-            res.status(404).send("Mentee not found!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Server error");
+  try {
+    const menteeId = req.params.menteeId;
+    const snapshot = await database.ref(`mentees/${menteeId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("my-bookings", { menteeId });
+    } else {
+      res.status(404).send("Mentee not found!");
     }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/view-requests/:mentorId", async (req, res) => {
-    try {
-        const mentorId = req.params.mentorId;
-        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("view-requests", { mentorId });
-        } else {
-            res.status(404).send("Mentor not found!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Server error");
+  try {
+    const mentorId = req.params.mentorId;
+    const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("view-requests", { mentorId });
+    } else {
+      res.status(404).send("Mentor not found!");
     }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Add this route to server.js (after view-requests route)
 
 // Mentor Bookings page - View accepted/scheduled sessions
 app.get("/mentor-bookings/:mentorId", async (req, res) => {
-    try {
-        const mentorId = req.params.mentorId;
-        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("mentor-bookings", { mentorId });
-        } else {
-            res.status(404).send("Mentor not found!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Server error");
+  try {
+    const mentorId = req.params.mentorId;
+    const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("mentor-bookings", { mentorId });
+    } else {
+      res.status(404).send("Mentor not found!");
     }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // chatting using socket.io
@@ -383,107 +406,118 @@ app.get("/mentor-bookings/:mentorId", async (req, res) => {
 // Chat page
 // Replace your /chat route with this:
 app.get("/chat/:currentUserId/:otherUserId", async (req, res) => {
-    try {
-        const currentUserId = req.params.currentUserId;
-        const otherUserId = req.params.otherUserId;
+  try {
+    const currentUserId = req.params.currentUserId;
+    const otherUserId = req.params.otherUserId;
 
-        // Get current user data
-        let currentUserSnapshot = await database.ref(`mentees/${currentUserId}`).once("value");
-        let currentUserData = currentUserSnapshot.val();
-        let currentUserType = 'mentee';
+    // Get current user data
+    let currentUserSnapshot = await database
+      .ref(`mentees/${currentUserId}`)
+      .once("value");
+    let currentUserData = currentUserSnapshot.val();
+    let currentUserType = "mentee";
 
-        if (!currentUserData) {
-            currentUserSnapshot = await database.ref(`mentors/${currentUserId}`).once("value");
-            currentUserData = currentUserSnapshot.val();
-            currentUserType = 'mentor';
-        }
-
-        // Get other user data
-        let otherUserSnapshot = await database.ref(`mentees/${otherUserId}`).once("value");
-        let otherUserData = otherUserSnapshot.val();
-
-        if (!otherUserData) {
-            otherUserSnapshot = await database.ref(`mentors/${otherUserId}`).once("value");
-            otherUserData = otherUserSnapshot.val();
-        }
-
-        if (currentUserData && otherUserData) {
-            // Store chat contact in Firebase
-            const chatId = [currentUserId, otherUserId].sort().join('_');
-            await database.ref(`chats/${chatId}`).set({
-                users: [currentUserId, otherUserId],
-                user1: {
-                    id: currentUserId,
-                    name: `${currentUserData.firstName} ${currentUserData.lastName}`
-                },
-                user2: {
-                    id: otherUserId,
-                    name: `${otherUserData.firstName} ${otherUserData.lastName}`
-                },
-                lastActivity: new Date().toISOString()
-            });
-
-            res.render("chat", {
-                currentUserId,
-                currentUserName: `${currentUserData.firstName} ${currentUserData.lastName}`,
-                otherUserId,
-                otherUserName: `${otherUserData.firstName} ${otherUserData.lastName}`
-            });
-        } else {
-            res.status(404).send("User not found!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Server error");
+    if (!currentUserData) {
+      currentUserSnapshot = await database
+        .ref(`mentors/${currentUserId}`)
+        .once("value");
+      currentUserData = currentUserSnapshot.val();
+      currentUserType = "mentor";
     }
+
+    // Get other user data
+    let otherUserSnapshot = await database
+      .ref(`mentees/${otherUserId}`)
+      .once("value");
+    let otherUserData = otherUserSnapshot.val();
+
+    if (!otherUserData) {
+      otherUserSnapshot = await database
+        .ref(`mentors/${otherUserId}`)
+        .once("value");
+      otherUserData = otherUserSnapshot.val();
+    }
+
+    if (currentUserData && otherUserData) {
+      // Store chat contact in Firebase
+      const chatId = [currentUserId, otherUserId].sort().join("_");
+      await database.ref(`chats/${chatId}`).set({
+        users: [currentUserId, otherUserId],
+        user1: {
+          id: currentUserId,
+          name: `${currentUserData.firstName} ${currentUserData.lastName}`,
+        },
+        user2: {
+          id: otherUserId,
+          name: `${otherUserData.firstName} ${otherUserData.lastName}`,
+        },
+        lastActivity: new Date().toISOString(),
+      });
+
+      res.render("chat", {
+        currentUserId,
+        currentUserName: `${currentUserData.firstName} ${currentUserData.lastName}`,
+        otherUserId,
+        otherUserName: `${otherUserData.firstName} ${otherUserData.lastName}`,
+      });
+    } else {
+      res.status(404).send("User not found!");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 // Get chat contacts for a mentor
 app.get("/mentor-chat-contacts/:mentorId", async (req, res) => {
-    try {
-        const mentorId = req.params.mentorId;
-        const snapshot = await database.ref("chats").once("value");
-        const chatsData = snapshot.val();
+  try {
+    const mentorId = req.params.mentorId;
+    const snapshot = await database.ref("chats").once("value");
+    const chatsData = snapshot.val();
 
-        const contacts = [];
-        
-        if (chatsData) {
-            for (let chatId in chatsData) {
-                const chat = chatsData[chatId];
-                if (chat.users.includes(mentorId)) {
-                    // Find the other user (mentee)
-                    const otherUserId = chat.users.find(id => id !== mentorId);
-                    const otherUser = chat.user1.id === otherUserId ? chat.user1 : chat.user2;
-                    
-                    contacts.push({
-                        id: otherUser.id,
-                        name: otherUser.name
-                    });
-                }
-            }
+    const contacts = [];
+
+    if (chatsData) {
+      for (let chatId in chatsData) {
+        const chat = chatsData[chatId];
+        if (chat.users.includes(mentorId)) {
+          // Find the other user (mentee)
+          const otherUserId = chat.users.find((id) => id !== mentorId);
+          const otherUser =
+            chat.user1.id === otherUserId ? chat.user1 : chat.user2;
+
+          contacts.push({
+            id: otherUser.id,
+            name: otherUser.name,
+          });
         }
-
-        res.json({ success: true, contacts });
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({ success: false, message: "Failed to fetch contacts" });
+      }
     }
+
+    res.json({ success: true, contacts });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch contacts" });
+  }
 });
 
 // Mentor Chats List page
 app.get("/mentor-chats/:mentorId", async (req, res) => {
-    try {
-        const mentorId = req.params.mentorId;
-        const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
-        const userData = snapshot.val();
-        
-        if (userData) {
-            res.render("mentor-chats", { mentorId });
-        } else {
-            res.status(404).send("Mentor not found!");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).send("Server error");
+  try {
+    const mentorId = req.params.mentorId;
+    const snapshot = await database.ref(`mentors/${mentorId}`).once("value");
+    const userData = snapshot.val();
+
+    if (userData) {
+      res.render("mentor-chats", { mentorId });
+    } else {
+      res.status(404).send("Mentor not found!");
     }
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Server error");
+  }
 });
